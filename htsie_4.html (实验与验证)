@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTSIE IV: HTSIE Predictions and Experimental Validation</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #24292f; max-width: 800px; margin: 0 auto; padding: 40px 20px; background-color: #fafafa; }
+        .nav-bar { display: flex; justify-content: space-between; border-bottom: 1px solid #d0d7de; padding-bottom: 12px; margin-bottom: 30px; }
+        .nav-bar a { text-decoration: none; color: #57606a; font-weight: 500; font-size: 0.95rem; }
+        .nav-bar a.active { color: #0969da; font-weight: 600; border-bottom: 2px solid #0969da; padding-bottom: 10px; }
+        .content-card { background: #ffffff; border: 1px solid #d0d7de; border-radius: 6px; padding: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        h1 { font-size: 1.75rem; font-weight: 600; color: #1f2328; margin-top: 0; }
+        .meta-item { margin: 16px 0; padding-left: 12px; border-left: 4px solid #0969da; }
+        .pager { display: flex; justify-content: space-between; margin-top: 30px; border-top: 1px solid #d0d7de; padding-top: 16px; }
+        .pager a { text-decoration: none; color: #0969da; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <a href="htsie_1.html">I 理论基础</a>
+        <a href="htsie_2.html">II 数学骨架</a>
+        <a href="htsie_3.html">III LLM 可解释性</a>
+        <a href="htsie_4.html" class="active">IV 实验证伪</a>
+        <a href="htsie_5.html">V 跨学科应用</a>
+    </div>
+
+    <div class="content-card">
+        <h1>🧪 HTSIE IV：HTSIE Predictions and Experimental Validation（实验与数值验证）</h1>
+        
+        <div class="meta-item">
+            <p style="margin: 0;"><strong style="color: #57606a; display: block; margin-bottom: 4px;">💡 逻辑定位</strong></p>
+            <p style="margin: 0; font-size: 1.05rem;">这是让所有怀疑者闭嘴的“证伪与实验舱”。</p>
+        </div>
+
+        <div class="meta-item">
+            <p style="margin: 0;"><strong style="color: #57606a; display: block; margin-bottom: 4px;">🎯 核心任务</strong></p>
+            <p style="margin: 0; font-size: 1.05rem;">不仅要解释已知（SAE、黑洞），更要给出<strong>特异性预言（Falsifiable Predictions）</strong>。</p>
+        </div>
+
+        <div class="meta-item">
+            <p style="margin: 0;"><strong style="color: #57606a; display: block; margin-bottom: 4px;">🛠️ 实操逻辑</strong></p>
+            <p style="margin: 0; font-size: 1.05rem;">直接去测量 SAE 权重矩阵的激活协方差矩阵谱密度，验证有效谱维度是否真的发生了由 EDI 控制的系统性流动。</p>
+        </div>
+    </div>
+
+    <div class="pager">
+        <a href="htsie_3.html">&larr; 上一卷：III LLM 可解释性</a>
+        <a href="htsie_5.html">下一卷：V 跨学科应用 &rarr;</a>
+    </div>
+
+</body>
+</html>
