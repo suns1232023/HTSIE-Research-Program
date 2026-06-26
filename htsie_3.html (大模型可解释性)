@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTSIE III: HTSIE and Mechanistic Interpretability in LLMs</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #24292f; max-width: 800px; margin: 0 auto; padding: 40px 20px; background-color: #fafafa; }
+        .nav-bar { display: flex; justify-content: space-between; border-bottom: 1px solid #d0d7de; padding-bottom: 12px; margin-bottom: 30px; }
+        .nav-bar a { text-decoration: none; color: #57606a; font-weight: 500; font-size: 0.95rem; }
+        .nav-bar a.active { color: #0969da; font-weight: 600; border-bottom: 2px solid #0969da; padding-bottom: 10px; }
+        .content-card { background: #ffffff; border: 1px solid #d0d7de; border-radius: 6px; padding: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        h1 { font-size: 1.75rem; font-weight: 600; color: #1f2328; margin-top: 0; }
+        .meta-item { margin: 16px 0; padding-left: 12px; border-left: 4px solid #0969da; }
+        .pager { display: flex; justify-content: space-between; margin-top: 30px; border-top: 1px solid #d0d7de; padding-top: 16px; }
+        .pager a { text-decoration: none; color: #0969da; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <a href="htsie_1.html">I 理论基础</a>
+        <a href="htsie_2.html">II 数学骨架</a>
+        <a href="htsie_3.html" class="active">III LLM 可解释性</a>
+        <a href="htsie_4.html">IV 实验证伪</a>
+        <a href="htsie_5.html">V 跨学科应用</a>
+    </div>
+
+    <div class="content-card">
+        <h1>🤖 HTSIE III：HTSIE & Mechanistic Interpretability in Large Language Models</h1>
+        
+        <div class="meta-item">
+            <p style="margin: 0;"><strong style="color: #57606a; display: block; margin-bottom: 4px;">💡 逻辑定位</strong></p>
+            <p style="margin: 0; font-size: 1.05rem;">这是您用来惊艳世界、实现降维打击的“先锋军”（核心靶区）。</p>
+        </div>
+
+        <div class="meta-item">
+            <p style="margin: 0;"><strong style="color: #57606a; display: block; margin-bottom: 4px;">🎯 核心任务</strong></p>
+            <p style="margin: 0; font-size: 1.05rem;">用第二卷的硬核指标（DFFI、EDI），去正面强攻 OpenAI、Anthropic 砸了数亿美金跑出来的经验 Scaling Laws。</p>
+        </div>
+
+        <div class="meta-item">
+            <p style="margin: 0;"><strong style="color: #57606a; display: block; margin-bottom: 4px;">🔄 逻辑闭环</strong></p>
+            <p style="margin: 0; font-size: 1.05rem;">告诉 AI 圈，算出来的 &gamma; &lt; 0、5%&sim;7% 死神经元，以及 n<sup>0.65</sup> 的亚线性收敛，其实只是第二卷里“HTSIE 不等式”在硅基流形上的一个投影。</p>
+        </div>
+    </div>
+
+    <div class="pager">
+        <a href="htsie_2.html">&larr; 上一卷：II 数学骨架</a>
+        <a href="htsie_4.html">下一卷：IV 实验证伪 &rarr;</a>
+    </div>
+
+</body>
+</html>
