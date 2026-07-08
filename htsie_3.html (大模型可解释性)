@@ -11,7 +11,16 @@
         .nav-bar a.active { color: #0969da; font-weight: 600; border-bottom: 2px solid #0969da; padding-bottom: 10px; }
         .content-card { background: #ffffff; border: 1px solid #d0d7de; border-radius: 6px; padding: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         h1 { font-size: 1.75rem; font-weight: 600; color: #1f2328; margin-top: 0; }
+        h2 { font-size: 1.35rem; font-weight: 600; color: #1f2328; margin-top: 28px; border-bottom: 1px solid #eaeef2; padding-bottom: 6px; }
         .meta-item { margin: 16px 0; padding-left: 12px; border-left: 4px solid #0969da; }
+        
+        .report-box { background-color: #ffffff; border: 1px solid #d0d7de; border-radius: 6px; margin-top: 24px; }
+        .report-header { background-color: #f6f8fa; border-bottom: 1px solid #d0d7de; padding: 12px 16px; border-radius: 6px 6px 0 0; font-weight: 600; color: #24292f; display: flex; align-items: center; justify-content: space-between; }
+        .report-body { padding: 20px; }
+        .focus-card { background-color: #f8f9fa; border-left: 4px solid #dd514c; padding: 12px 16px; margin-bottom: 16px; border-radius: 0 4px 4px 0; }
+        .focus-card h4 { margin: 0 0 6px 0; color: #1f2328; font-size: 1.05rem; }
+        .focus-card p { margin: 0; font-size: 0.95rem; color: #24292f; }
+        
         .pager { display: flex; justify-content: space-between; margin-top: 30px; border-top: 1px solid #d0d7de; padding-top: 16px; }
         .pager a { text-decoration: none; color: #0969da; font-weight: 500; }
     </style>
@@ -27,7 +36,7 @@
     </div>
 
     <div class="content-card">
-        <h1>🤖 HTSIE III：HTSIE & Mechanistic Interpretability in Large Language Models</h1>
+        <h1>🤖 HTSIE III：HTSIE and Mechanistic Interpretability in Large Language Models</h1>
         
         <div class="meta-item">
             <p style="margin: 0;"><strong style="color: #57606a; display: block; margin-bottom: 4px;">💡 逻辑定位</strong></p>
@@ -41,13 +50,40 @@
 
         <div class="meta-item">
             <p style="margin: 0;"><strong style="color: #57606a; display: block; margin-bottom: 4px;">🔄 逻辑闭环</strong></p>
-            <p style="margin: 0; font-size: 1.05rem;">告诉 AI 圈，算出来的 &gamma; &lt; 0、5%&sim;7% 死神经元，以及 n<sup>0.65</sup> 的亚线性收敛，其实只是第二卷里“HTSIE 不等式”在硅基流形上的一个投影。</p>
+            <p style="margin: 0; font-size: 1.05rem;">告诉 AI 圈，算出来的 伽马 &lt; 0、5% 到 7% 死神经元，以及 n<sup>0.65</sup> 的亚线性收敛，其实只是第二卷里“HTSIE 不等式”在硅基流形上的一个投影。</p>
+        </div>
+
+        <h2>🔬 交叉科学论证：HTSIE 视角审视 SAE 标度律</h2>
+        
+        <div class="report-box">
+            <div class="report-header">
+                <span>📑 Deep Research Analysis: HTSIE and SAE</span>
+                <span style="font-size: 0.8rem; color: #57606a; font-weight: normal;">Reviewer-Level Standards</span>
+            </div>
+            <div class="report-body">
+                
+                <div class="focus-card">
+                    <h4>1. 强攻 伽马 &lt; 0 非可分离相互作用项</h4>
+                    <p>Gao et al. (2024) 提出的经验重构误差公式中，包含一个非可分离的负交叉项（伽马 = -0.042）。HTSIE 理论认为：这并非单纯的统计拟合巧合，而是<strong>有效维度指数（EDI）</strong>控制下，高维信息流形在极端稀疏约束下自发向低维流形边界收缩的“谱维度流动（Spectral Dimension Flow）”现象在硅基架构上的实体投影。</p>
+                </div>
+
+                <div class="focus-card" style="border-left-color: #2bba71;">
+                    <h4>2. 7% 死隐变量（Dead Latents）的统计相变</h4>
+                    <p>实证表明，即便使用高级的 AuxK 辅助损失函数，大模型在扩展（Scale）过程中，依然有大约 5% 到 7% 的隐变量陷入不可逆的“自发失活”状态。HTSIE 指出：这些死神经元代表着系统为了在极高能量约束下换取结构稳定性，而发生微观态对称性破缺、导致背景自由度被局部锁死的结果，由<strong>自由度冻结指数（DFFI）</strong>给出其绝对物理极限。</p>
+                </div>
+
+                <div class="focus-card" style="border-left-color: #f0a020;">
+                    <h4>3. 神经元亚线性收敛与 3D Ising 临界指数的共振</h4>
+                    <p>SAE 训练所需的临界样本量满足 T 正比于 n<sup>0.60~0.65</sup> 的标度关系。这一独特的经验亚线性幂律，在数值上与统计物理学中 3D Ising 模型的临界关联指数（约等于 0.6308）高度吻合。这直接映射了信息折叠算子在驱动神经网络隐空间流形进行拓扑折叠时，所遵循的广义热力学相变临界性。</p>
+                </div>
+
+            </div>
         </div>
     </div>
 
     <div class="pager">
-        <a href="htsie_2.html">&larr; 上一卷：II 数学骨架</a>
-        <a href="htsie_4.html">下一卷：IV 实验证伪 &rarr;</a>
+        <a href="htsie_2.html">← 上一卷：II 数学骨架</a>
+        <a href="htsie_4.html">下一卷：IV 实验证伪 →</a>
     </div>
 
 </body>
