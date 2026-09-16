@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+```
+<!-- =========================================================
+     Basic document metadata
+     ========================================================= -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HTSIE Research Programme — Structural Information Evolution | Scott Sun</title>
+
+<meta name="description"
+      content="HTSIE Research Programme by Scott Sun: a research programme investigating structural information evolution, entropy, spectral dimension flow, information geometry, emergent causality, and cross-scale physical systems.">
+
+<meta name="keywords"
+      content="HTSIE, Structural Information Evolution, information geometry, spectral dimension flow, entropy evolution, emergent causality, quantum gravity, mathematical physics, computational physics, Scott Sun">
+
+<meta name="author" content="Scott Sun">
+
+<meta name="robots" content="index, follow, max-image-preview:large">
+
+<meta name="googlebot" content="index, follow">
+
+<link rel="canonical"
+      href="https://suns1232023.github.io/HTSIE-Research-Program/">
+
+<!-- =========================================================
+     Google Scholar / Highwire Press metadata
+     These describe the programme-level research document.
+     Individual papers should have their own pages and metadata.
+     ========================================================= -->
+
+<meta name="citation_title"
+      content="HTSIE Research Programme: Structural Information Evolution Across Physical and Computational Scales">
+
+<meta name="citation_author"
+      content="Sun, Scott">
+
+<meta name="citation_publication_date"
+      content="2026">
+
+<meta name="citation_technical_report_institution"
+      content="Independent Research Programme">
+
+<meta name="citation_language"
+      content="en">
+
+<meta name="citation_fulltext_html_url"
+      content="https://suns1232023.github.io/HTSIE-Research-Program/">
+
+<!-- =========================================================
+     Open Graph metadata
+     ========================================================= -->
+
+<meta property="og:type" content="website">
+
+<meta property="og:title"
+      content="HTSIE Research Programme — Structural Information Evolution">
+
+<meta property="og:description"
+      content="An open research programme on structural information evolution, information geometry, spectral dimension flow, entropy, and emergent physical structure.">
+
+<meta property="og:url"
+      content="https://suns1232023.github.io/HTSIE-Research-Program/">
+
+<meta property="og:site_name"
+      content="HTSIE Research Programme">
+
+<!-- =========================================================
+     Twitter / social preview
+     ========================================================= -->
+
+<meta name="twitter:card" content="summary">
+
+<meta name="twitter:title"
+      content="HTSIE Research Programme — Structural Information Evolution">
+
+<meta name="twitter:description"
+      content="Open research programme by Scott Sun on structural information evolution, information geometry, spectral dimension flow, and emergent physical structure.">
+
+<!-- =========================================================
+     ScholarlyArticle / ResearchProgramme structured data
+     ========================================================= -->
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ResearchProject",
+  "name": "HTSIE Research Programme",
+  "alternateName": "Structural Information Evolution Research Programme",
+  "description": "An open research programme investigating structural information evolution, information geometry, entropy, spectral dimension flow, emergent causality, and cross-scale physical systems.",
+  "url": "https://suns1232023.github.io/HTSIE-Research-Program/",
+  "author": {
+    "@type": "Person",
+    "name": "Scott Sun",
+    "url": "https://scottsun.com/"
+  },
+  "sameAs": [
+    "https://orcid.org/0009-0002-1095-6228",
+    "https://scholar.google.com/citations?user=bmVEc3wAAAAJ",
+    "https://www.researchgate.net/profile/Scott-Sun-3",
+    "https://github.com/suns1232023/HTSIE-Research-Program"
+  ],
+  "keywords": [
+    "structural information evolution",
+    "information geometry",
+    "spectral dimension flow",
+    "entropy evolution",
+    "emergent causality",
+    "quantum gravity",
+    "mathematical physics",
+    "computational physics"
+  ]
+}
+</script>
+
+<!-- =========================================================
+     Minimal academic CSS
+     ========================================================= -->
+
+<style>
+
+    :root {
+        --text: #202124;
+        --muted: #5f6368;
+        --border: #dadce0;
+        --accent: #1a73e8;
+        --background: #ffffff;
+        --soft: #f8f9fa;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        margin: 0;
+        background: var(--background);
+        color: var(--text);
+        font-family:
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            Helvetica,
+            Arial,
+            sans-serif;
+        line-height: 1.65;
+    }
+
+    main {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 48px 24px 64px;
+    }
+
+    header {
+        padding-bottom: 28px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    h1 {
+        margin: 0 0 12px;
+        font-size: 2.35rem;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+    }
+
+    h2 {
+        margin-top: 42px;
+        margin-bottom: 16px;
+        font-size: 1.55rem;
+    }
+
+    h3 {
+        margin-top: 0;
+        margin-bottom: 8px;
+        font-size: 1.08rem;
+    }
+
+    p {
+        margin: 0 0 14px;
+    }
+
+    .subtitle {
+        font-size: 1.12rem;
+        color: var(--muted);
+        max-width: 780px;
+    }
+
+    .identity {
+        margin-top: 16px;
+        font-size: 0.95rem;
+        color: var(--muted);
+    }
+
+    a {
+        color: var(--accent);
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    nav {
+        margin-top: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        font-size: 0.95rem;
+    }
+
+    .intro {
+        margin-top: 30px;
+        max-width: 850px;
+    }
+
+    .note {
+        margin-top: 22px;
+        padding: 16px 18px;
+        background: var(--soft);
+        border-left: 3px solid var(--accent);
+        color: #3c4043;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+        margin-top: 20px;
+    }
+
+    .card {
+        display: block;
+        padding: 20px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--text);
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    .card:hover {
+        text-decoration: none;
+        border-color: var(--accent);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        transform: translateY(-2px);
+    }
+
+    .card p {
+        color: var(--muted);
+        font-size: 0.94rem;
+    }
+
+    .badge {
+        display: inline-block;
+        margin-top: 8px;
+        font-size: 0.82rem;
+        color: var(--accent);
+        font-weight: 600;
+    }
+
+    .publication-list {
+        margin-top: 12px;
+    }
+
+    .publication {
+        padding: 18px 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .publication:last-child {
+        border-bottom: none;
+    }
+
+    .publication-title {
+        font-weight: 600;
+        font-size: 1.02rem;
+    }
+
+    .publication-meta {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 0.9rem;
+    }
+
+    .links {
+        margin-top: 8px;
+        font-size: 0.9rem;
+    }
+
+    .links a {
+        margin-right: 14px;
+    }
+
+    .resources {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+    }
+
+    .resource {
+        padding: 16px;
+        background: var(--soft);
+        border-radius: 8px;
+    }
+
+    footer {
+        margin-top: 56px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 0.85rem;
+    }
+
+    @media (max-width: 600px) {
+
+        main {
+            padding: 32px 18px 48px;
+        }
+
+        h1 {
+            font-size: 1.9rem;
+        }
+
+        h2 {
+            font-size: 1.35rem;
+        }
+
+    }
+
+</style>
+```
+
+</head>
+
+<body>
+
+<main>
+
+```
+<!-- =========================================================
+     Header
+     ========================================================= -->
+
+<header>
+
+    <h1>HTSIE Research Programme</h1>
+
+    <p class="subtitle">
+        Structural Information Evolution Across Physical and Computational Scales
+    </p>
+
+    <p class="identity">
+        <strong>Scott Sun</strong> — Independent Researcher
+    </p>
+
+    <nav aria-label="Research navigation">
+        <a href="#programme">Programme</a>
+        <a href="#modules">Research Modules</a>
+        <a href="#publications">Selected Publications</a>
+        <a href="#data">Data & Code</a>
+        <a href="#profiles">Research Profiles</a>
+    </nav>
+
+</header>
+
+
+<!-- =========================================================
+     Research programme
+     ========================================================= -->
+
+<section id="programme">
+
+    <h2>Research Programme</h2>
+
+    <div class="intro">
+
+        <p>
+            The <strong>HTSIE Research Programme</strong> investigates how
+            structural information, entropy, geometry and effective dimensionality
+            may evolve across physical and computational scales.
+        </p>
+
+        <p>
+            The programme develops mathematical and computational frameworks
+            connecting structural information, spectral dimension flow,
+            information geometry, emergent causality and scale-dependent
+            physical descriptions.
+        </p>
+
+        <p>
+            The work is exploratory and programme-based: individual hypotheses,
+            mathematical constructions and computational results are presented
+            as separate research components so that they can be independently
+            examined, reproduced and extended.
+        </p>
+
+    </div>
+
+    <div class="note">
+        <strong>Research status:</strong>
+        Open research programme. Individual papers and computational results
+        should be evaluated independently according to their mathematical,
+        computational and empirical evidence.
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     Research modules
+     ========================================================= -->
+
+<section id="modules">
+
+    <h2>Research Modules</h2>
+
+    <div class="grid">
+
+        <a href="htsie_1.html" class="card">
+
+            <h3>Part 1 — Theoretical Foundations</h3>
+
+            <p>
+                Structural information, entropy and the conceptual foundations
+                of information evolution.
+            </p>
+
+            <span class="badge">Research module →</span>
+
+        </a>
+
+
+        <a href="htsie_2.html" class="card">
+
+            <h3>Part 2 — Mathematical Structure</h3>
+
+            <p>
+                Mathematical formulations involving spectral flow,
+                effective dimensionality and geometric structure.
+            </p>
+
+            <span class="badge">Research module →</span>
+
+        </a>
+
+
+        <a href="htsie_3.html" class="card">
+
+            <h3>Part 3 — Computational Interpretability</h3>
+
+            <p>
+                Large-language-model representations, sparse autoencoders,
+                covariance geometry and structural information.
+            </p>
+
+            <span class="badge">Research module →</span>
+
+        </a>
+
+
+        <a href="htsie_4.html" class="card">
+
+            <h3>Part 4 — Computational Experiments</h3>
+
+            <p>
+                PyTorch experiments, numerical analysis and computational
+                protocols designed to test specific research hypotheses.
+            </p>
+
+            <span class="badge">Research module →</span>
+
+        </a>
+
+
+        <a href="htsie_5.html" class="card">
+
+            <h3>Part 5 — Cross-System Applications</h3>
+
+            <p>
+                Comparative applications involving condensed matter,
+                quantum plasma, compact objects and black-hole systems.
+            </p>
+
+            <span class="badge">Research module →</span>
+
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     Selected publications
+     ========================================================= -->
+
+<section id="publications">
+
+    <h2>Selected Publications and Research Papers</h2>
+
+    <p>
+        The following publications form part of the broader research programme.
+        Each publication should be treated as an independent scholarly work.
+    </p>
+
+
+    <div class="publication-list">
+
+
+        <article class="publication">
+
+            <div class="publication-title">
+                <a href="https://www.researchgate.net/publication/414084644_Why_the_Past_May_Be_Physically_Inaccessible_A_Theoretical_Review_and_Compatibility_Framework_Evidence_Classification"
+                   rel="noopener">
+                    Why the Past May Be Physically Inaccessible:
+                    A Theoretical Review and Compatibility Framework for Evidence Classification
+                </a>
+            </div>
+
+            <div class="publication-meta">
+                Scott Sun · ResearchGate · 2026
+            </div>
+
+            <div class="links">
+                <a href="https://www.researchgate.net/publication/414084644_Why_the_Past_May_Be_Physically_Inaccessible_A_Theoretical_Review_and_Compatibility_Framework_Evidence_Classification"
+                   rel="noopener">
+                    ResearchGate
+                </a>
+            </div>
+
+        </article>
+
+
+        <article class="publication">
+
+            <div class="publication-title">
+                <a href="https://www.researchgate.net/publication/411800975_A_Phenomenological_Framework_for_Short-Range_Gravitational_Signatures_from_Spectral_Dimension_Flow"
+                   rel="noopener">
+                    A Phenomenological Framework for Short-Range Gravitational
+                    Signatures from Spectral Dimension Flow
+                </a>
+            </div>
+
+            <div class="publication-meta">
+                Scott Sun · August 2026
+            </div>
+
+            <div class="links">
+                <a href="https://www.researchgate.net/publication/411800975_A_Phenomenological_Framework_for_Short-Range_Gravitational_Signatures_from_Spectral_Dimension_Flow"
+                   rel="noopener">
+                    ResearchGate
+                </a>
+            </div>
+
+        </article>
+
+
+        <article class="publication">
+
+            <div class="publication-title">
+                <a href="https://www.researchgate.net/publication/410989519_Mobius-Lorentz_Quotients_and_Null_Pin_Holonomy_Affine_Normal_Forms_Null-Displacement_Loci_Mapping-Torus_Topology_Pin_Lifts_and_Mirror-Residue_Pairing"
+                   rel="noopener">
+                    Möbius–Lorentz Quotients and Null Pin Holonomy:
+                    Affine Normal Forms, Null-Displacement Loci,
+                    Mapping-Torus Topology, Pin Lifts, and Mirror-Residue Pairing
+                </a>
+            </div>
+
+            <div class="publication-meta">
+                Scott Sun · August 2026
+            </div>
+
+            <div class="links">
+                <a href="https://www.researchgate.net/publication/410989519_Mobius-Lorentz_Quotients_and_Null_Pin_Holonomy_Affine_Normal_Forms_Null-Displacement_Loci_Mapping-Torus_Topology_Pin_Lifts_and_Mirror-Residue_Pairing"
+                   rel="noopener">
+                    ResearchGate
+                </a>
+            </div>
+
+        </article>
+
+
+        <article class="publication">
+
+            <div class="publication-title">
+                <a href="https://www.researchgate.net/publication/411189028_Particle_Quintuple_Descriptor_Framework_Formal_Integration_of_Information_Geometry_de_Rham_Cohomology_and_Field_Theory"
+                   rel="noopener">
+                    Particle Quintuple Descriptor Framework:
+                    Formal Integration of Information Geometry,
+                    de Rham Cohomology, and Field Theory
+                </a>
+            </div>
+
+            <div class="publication-meta">
+                Scott Sun and Solomon Chen · August 2026
+            </div>
+
+            <div class="links">
+                <a href="https://www.researchgate.net/publication/411189028_Particle_Quintuple_Descriptor_Framework_Formal_Integration_of_Information_Geometry_de_Rham_Cohomology_and_Field_Theory"
+                   rel="noopener">
+                    ResearchGate
+                </a>
+            </div>
+
+        </article>
+
+
+        <article class="publication">
+
+            <div class="publication-title">
+                <a href="https://www.researchgate.net/publication/411183208_Geometric_Constraint_Evolution_and_Large-Scale_Cosmological_CorrelationsA_Mathematical_Research_Programme"
+                   rel="noopener">
+                    Geometric Constraint Evolution and Large-Scale
+                    Cosmological Correlations:
+                    A Mathematical Research Programme
+                </a>
+            </div>
+
+            <div class="publication-meta">
+                Scott Sun and Solomon Chen · August 2026
+            </div>
+
+            <div class="links">
+                <a href="https://www.researchgate.net/publication/411183208_Geometric_Constraint_Evolution_and_Large-Scale_Cosmological_CorrelationsA_Mathematical_Research_Programme"
+                   rel="noopener">
+                    ResearchGate
+                </a>
+            </div>
+
+        </article>
+
+
+        <article class="publication">
+
+            <div class="publication-title">
+                <a href="https://www.researchgate.net/publication/411174715_Information_Accessibility_Transition_A_Geometry-First_Framework"
+                   rel="noopener">
+                    Information Accessibility Transition:
+                    A Geometry-First Framework
+                </a>
+            </div>
+
+            <div class="publication-meta">
+                Scott Sun and Solomon Chen · July 2026
+            </div>
+
+            <div class="links">
+                <a href="https://www.researchgate.net/publication/411174715_Information_Accessibility_Transition_A_Geometry-First_Framework"
+                   rel="noopener">
+                    ResearchGate
+                </a>
+            </div>
+
+        </article>
+
+
+        <article class="publication">
+
+            <div class="publication-title">
+                <a href="https://www.researchgate.net/publication/411094172_The_Hidden_Thread_of_Structural_Information_Evolution_A_Comparative_Study_of_Condensed_Matter_Quantum_Plasma_and_Black_Hole_Systems"
+                   rel="noopener">
+                    The Hidden Thread of Structural Information Evolution:
+                    A Comparative Study of Condensed Matter,
+                    Quantum Plasma and Black Hole Systems
+                </a>
+            </div>
+
+            <div class="publication-meta">
+                Scott Sun · June 2026
+            </div>
+
+            <div class="links">
+                <a href="https://www.researchgate.net/publication/411094172_The_Hidden_Thread_of_Structural_Information_Evolution_A_Comparative_Study_of_Condensed_Matter_Quantum_Plasma_and_Black_Hole_Systems"
+                   rel="noopener">
+                    ResearchGate
+                </a>
+            </div>
+
+        </article>
+
+
+        <article class="publication">
+
+            <div class="publication-title">
+                <a href="https://www.researchgate.net/publication/411084695_Fractal_Folding_Theory_From_the_Kakeya_Conjecture_to_Quantum_Gravity_Observations_A_Synthetic_Study_Based_on_Random_Boolean_Network_Simulation_and_Cross-Theoretical_Comparison_Revised_Version_-Response"
+                   rel="noopener">
+                    Fractal Folding Theory:
+                    From the Kakeya Conjecture to Quantum Gravity Observations
+                </a>
+            </div>
+
+            <div class="publication-meta">
+                Scott Sun · May 2026
+            </div>
+
+            <div class="links">
+                <a href="https://www.researchgate.net/publication/411084695_Fractal_Folding_Theory_From_the_Kakeya_Conjecture_to_Quantum_Gravity_Observations_A_Synthetic_Study_Based_on_Random_Boolean_Network_Simulation_and_Cross-Theoretical_Comparison_Revised_Version_-Response"
+                   rel="noopener">
+                    ResearchGate
+                </a>
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     Open data and code
+     ========================================================= -->
+
+<section id="data">
+
+    <h2>Open Data, Code and Research Resources</h2>
+
+    <div class="resources">
+
+        <div class="resource">
+
+            <h3>OpenXLab Dataset</h3>
+
+            <p>
+                Research datasets associated with HTSIE computational
+                experiments, including activation and spectral data.
+            </p>
+
+            <a href="https://openxlab.org.cn/datasets/suns1232026/HTSIE"
+               rel="noopener">
+                View dataset →
+            </a>
+
+        </div>
+
+
+        <div class="resource">
+
+            <h3>GitHub Repository</h3>
+
+            <p>
+                Source code, computational experiments, research notes
+                and programme documentation.
+            </p>
+
+            <a href="https://github.com/suns1232023/HTSIE-Research-Program"
+               rel="noopener">
+                View repository →
+            </a>
+
+        </div>
+
+
+        <div class="resource">
+
+            <h3>Research Identity</h3>
+
+            <p>
+                Persistent researcher identifiers and scholarly profiles.
+            </p>
+
+            <a href="https://orcid.org/0009-0002-1095-6228"
+               rel="noopener">
+                ORCID →
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     Research profiles
+     ========================================================= -->
+
+<section id="profiles">
+
+    <h2>Research Profiles</h2>
+
+    <p>
+        Persistent profiles and scholarly records associated with this
+        research programme:
+    </p>
+
+    <ul>
+
+        <li>
+            <a href="https://orcid.org/0009-0002-1095-6228"
+               rel="noopener">
+                ORCID — Scott Sun
+            </a>
+        </li>
+
+        <li>
+            <a href="https://scholar.google.com/citations?user=bmVEc3wAAAAJ"
+               rel="noopener">
+                Google Scholar — Scott Sun
+            </a>
+        </li>
+
+        <li>
+            <a href="https://www.researchgate.net/profile/Scott-Sun-3"
+               rel="noopener">
+                ResearchGate — Scott Sun
+            </a>
+        </li>
+
+        <li>
+            <a href="https://github.com/suns1232023"
+               rel="noopener">
+                GitHub — suns1232023
+            </a>
+        </li>
+
+        <li>
+            <a href="https://scottsun.com/"
+               rel="noopener">
+                Independent Researcher Website — scottsun.com
+            </a>
+        </li>
+
+    </ul>
+
+</section>
+
+
+<!-- =========================================================
+     Citation information
+     ========================================================= -->
+
+<section id="citation">
+
+    <h2>How to Cite</h2>
+
+    <p>
+        When referring specifically to the HTSIE research programme,
+        please cite the programme record and, where applicable,
+        cite the individual paper or dataset corresponding to the
+        research being discussed.
+    </p>
+
+    <p>
+        Individual publications should retain their own bibliographic
+        metadata, persistent identifiers and version information.
+    </p>
+
+</section>
+
+
+<!-- =========================================================
+     Footer
+     ========================================================= -->
+
+<footer>
+
+    <p>
+        <strong>HTSIE Research Programme</strong>
+    </p>
+
+    <p>
+        Scott Sun · Independent Researcher · 2026
+    </p>
+
+    <p>
+        This site serves as an open research index and does not replace
+        the individual scholarly records, preprints, datasets or
+        persistent research identifiers linked above.
+    </p>
+
+</footer>
+```
+
+</main>
+
+</body>
+</html>
