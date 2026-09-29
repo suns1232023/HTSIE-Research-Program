@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-09-28T08:00:00Z",
+  "num_samples": 1000,
+  "feature_dim": 128,
+  "effective_dimensionality": 18.4251,
+  "knowledge_entropy": 3.1415,
+  "sae_sparsity": 0.7982,
+  "status": "COMPUTED"
+}
