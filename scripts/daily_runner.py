@@ -1,21 +1,26 @@
 import sys
 import os
-from datetime import datetime
+
+# 将 modules 加入环境变量路径
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from modules.fetch_data import fetch_sae_activations
+from modules.run_computations import run_htsie_pipeline
+from modules.generate_reports import update_daily_markdown_report
 
 def main():
-    print(f"[{datetime.now().isoformat()}] Starting Daily HTSIE Pipeline...")
+    print("=== Starting HTSIE Daily Workflow ===")
     
-    # 示例步骤 1: 运行每日数据计算/统计
-    # from modules.run_computations import process_daily_metrics
-    # process_daily_metrics()
+    # 1. 抓取/准备数据
+    raw_data_path = fetch_sae_activations(data_dir="data")
     
-    # 示例步骤 2: 更新汇总日志/报告
-    log_file = "data/daily_log.md"
-    os.makedirs(os.path.dirname(log_file), exist_ok=True)
-    with open(log_file, "a", encoding="utf-8") as f:
-        f.write(f"- Automated run completed on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-
-    print("Daily pipeline executed successfully.")
+    # 2. 运行计算
+    metrics_path = run_htsie_pipeline(raw_data_path=raw_data_path, output_dir="data")
+    
+    # 3. 生成并写回报告
+    update_daily_markdown_report(metrics_path=metrics_path, report_path="data/daily_log.md")
+    
+    print("=== HTSIE Daily Workflow Completed Successfully ===")
 
 if __name__ == "__main__":
     main()
