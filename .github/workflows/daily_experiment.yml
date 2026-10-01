@@ -1,20 +1,19 @@
+
 name: Daily HTSIE Task Update
 
 on:
   schedule:
-    - cron: "0 0 * * *" # 每天自动运行
-  workflow_dispatch: # 支持手动触发
+    - cron: "0 0 * * *"   # 每天 UTC 00:00 自动运行
+  workflow_dispatch:        # 支持手动触发
 
 jobs:
   auto-commit-job:
     runs-on: ubuntu-latest
 
-    # 🔑 关键修改 1：给予此 Job 写入仓库内容的权限
     permissions:
       contents: write
 
     steps:
-      # 🔑 关键修改 2：在 Checkout 时显式配置 GITHUB_TOKEN
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
@@ -26,18 +25,23 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Run HTSIE Processing Script
+      - name: Install Dependencies
         run: |
-          # 你的数据处理/特征提取脚本
-          python scripts/process_htsie_data.py
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
 
-      # 自动提交修改后的文件
+      - name: Run HTSIE Daily Pipeline
+        env:
+          OPENXLAB_TOKEN: ${{ secrets.OPENXLAB_TOKEN }}
+        run: |
+          python scripts/daily_runner.py
+
       - name: Auto-commit updated metrics and logs
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "auto: daily HTSIE task update [skip ci]"
           branch: main
-          file_pattern: "data/* experiments/* *.html"
+          file_pattern: "data/metrics.json data/daily_log.md"
           commit_author: "suns1232023 <145432766+suns1232023@users.noreply.github.com>"
           commit_user_name: "github-actions[bot]"
           commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
