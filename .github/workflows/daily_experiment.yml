@@ -1,53 +1,43 @@
-name: Daily HTSIE Automated Pipeline
+name: Daily HTSIE Task Update
 
 on:
   schedule:
-    # 每天 UTC 零点（北京时间 08:00）自动运行
-    - cron: '0 0 * * *'
-  workflow_dispatch: # 支持在 GitHub 界面手动一键触发
+    - cron: "0 0 * * *" # 每天自动运行
+  workflow_dispatch: # 支持手动触发
 
 jobs:
-  run-daily-task:
+  auto-commit-job:
     runs-on: ubuntu-latest
 
+    # 🔑 关键修改 1：给予此 Job 写入仓库内容的权限
+    permissions:
+      contents: write
+
     steps:
-      # 1. 检出代码
+      # 🔑 关键修改 2：在 Checkout 时显式配置 GITHUB_TOKEN
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
 
-      # 2. 配置 Python 环境
       - name: Set up Python
-        uses: actions/checkout@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.11"
 
-      # 3. 缓存 Python 依赖（加速每日构建）
-      - name: Cache Pip Dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('scripts/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      # 4. 安装依赖
-      - name: Install Dependencies
+      - name: Run HTSIE Processing Script
         run: |
-          python -m pip install --upgrade pip
-          if [ -f scripts/requirements.txt ]; then pip install -r scripts/requirements.txt; fi
+          # 你的数据处理/特征提取脚本
+          python scripts/process_htsie_data.py
 
-      # 5. 执行每日计算/任务脚本
-      - name: Execute Daily Task
-        env:
-          # 如果涉及 API Key 或 Token，在此处引入（需在 GitHub Repo Settings -> Secrets 中设置）
-          OPENXLAB_TOKEN: ${{ secrets.OPENXLAB_TOKEN }}
-        run: |
-          python scripts/daily_runner.py
-
-      # 6. 自动将更新内容（如新数据、生成报告）Commit 并 Push 回 GitHub
-      - name: Commit and Push Changes
+      # 自动提交修改后的文件
+      - name: Auto-commit updated metrics and logs
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "auto: daily HTSIE task update [skip ci]"
           branch: main
-          file_pattern: 'data/* experiments/* *.html'
+          file_pattern: "data/* experiments/* *.html"
+          commit_author: "suns1232023 <145432766+suns1232023@users.noreply.github.com>"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
