@@ -1,3 +1,4 @@
+
 # HTSIE Research Programme
 
 [![Research Programme](https://img.shields.io/badge/Research-HTSIE-2f6f9f)](https://suns1232023.github.io/HTSIE-Research-Program/)
@@ -275,7 +276,7 @@ Scott Sun · June 2026
 
 ---
 
-**8. Fractal Folding Theory: From the Kakeya Conjecture to Quantum Gravity Observations — A Synthetic Study Based on Random Boolean Network Simulation and Cross-Theoretical Comparison**
+**8. Fractal Folding Theory: From the Kakeya Conjecture to Quantum Gravity Observations**
 
 Scott Sun · May 2026
 
@@ -430,30 +431,41 @@ The programme is designed to make assumptions, methods, computational evidence, 
 ```text
 HTSIE-Research-Program/
 │
-├── index.html
+├── index.html                          # GitHub Pages entry point
 │
-├── htsie_1.html
-├── htsie_2.html
-├── htsie_3.html
-├── htsie_4.html
-├── htsie_5.html
-│
-├── publications/
-│   └── individual research papers
-│
-├── papers/
-│   └── PDF / archival documents
+├── htsie_1(理论基础).md               # Module I: Theoretical Foundations
+├── htsie_2(数学骨架).md               # Module II: Mathematical Framework
+├── htsie_3(大模型可解释性).md         # Module III: LLM Interpretability
+├── htsie_4(实验与验证).md             # Module IV: Experiments & Validation
+├── htsie_5(跨学科应用).md             # Module V: Cross-disciplinary Applications
 │
 ├── data/
-│   └── reproducible research data
+│   ├── metrics.json                    # Latest daily computed metrics
+│   ├── daily_log.md                    # Auto-appended daily execution log
+│   └── README.md                       # Data directory documentation
 │
 ├── experiments/
-│   └── computational experiments
+│   ├── __init__.py                     # Package initialiser
+│   ├── runner.py                       # Unified experiment orchestrator
+│   ├── sae_geometry.py                 # SAE geometry analysis
+│   └── cross_system.py                 # Cross-system spectral comparison
+│
+├── scripts/
+│   ├── daily_runner.py                 # Main pipeline orchestrator
+│   ├── requirements.txt                # Python dependencies
+│   └── modules/
+│       ├── fetch_data.py               # Data fetcher (simulated / OpenXLab)
+│       ├── run_computations.py         # d_eff, S_k, sparsity computation
+│       └── generate_reports.py         # Markdown report generator
+│
+├── .github/
+│   └── workflows/
+│       └── daily_experiment.yml        # Daily CI/CD pipeline
 │
 └── README.md
 ```
 
-The GitHub Pages site provides the public research index and human-readable entry point to the programme.
+> **Note on planned content:** Extended documentation pages and archival paper directories (`publications/`, `papers/`) are planned for future releases as the research programme develops.
 
 ---
 
