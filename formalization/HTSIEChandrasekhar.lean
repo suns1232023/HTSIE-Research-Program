@@ -1,0 +1,6 @@
+-- formalization/HTSIEChandrasekhar.lean
+import HTSIEChandrasekhar.Chandrasekhar.Basic
+import HTSIEChandrasekhar.Chandrasekhar.EquationOfState
+import HTSIEChandrasekhar.Chandrasekhar.Polytrope
+import HTSIEChandrasekhar.Chandrasekhar.MassLimit
+import HTSIEChandrasekhar.Chandrasekhar.Main
