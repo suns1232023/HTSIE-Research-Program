@@ -4,10 +4,9 @@ defaultTargets = ["HTSIEChandrasekhar"]
 
 [[require]]
 name = "mathlib"
-from = "git"
-url = "https://github.com/leanprover-community/mathlib4"
+scope = "leanprover-community"
 rev = "v4.14.0"
 
 [[lean_lib]]
 name = "HTSIEChandrasekhar"
-globs = ["Chandrasekhar.+"]
+globs = ["Chandrasekhar.**"]
