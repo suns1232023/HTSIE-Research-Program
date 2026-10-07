@@ -1,6 +1,6 @@
-name = "HTSIEFormalization"
-version = "0.2.0"
-defaultTargets = ["HTSIEFormalization"]
+name = "HTSIEChandrasekhar"
+version = "0.1.0"
+defaultTargets = ["HTSIEChandrasekhar"]
 
 [[require]]
 name = "mathlib"
@@ -9,11 +9,5 @@ url = "https://github.com/leanprover-community/mathlib4"
 rev = "v4.14.0"
 
 [[lean_lib]]
-name = "HTSIEFormalization"
-globs = [
-  "HTSIE/**",
-  "Measures/**",
-  "Theorems/**",
-  "Counterexamples/**",
-  "Applications/**"
-]
+name = "HTSIEChandrasekhar"
+globs = ["Chandrasekhar/**"]
