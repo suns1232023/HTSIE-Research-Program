@@ -11,9 +11,9 @@ rev = "v4.14.0"
 name = "HTSIEChandrasekhar"
 srcDir = "."
 roots = [
-  `Chandrasekhar.Basic,
-  `Chandrasekhar.EquationOfState,
-  `Chandrasekhar.Polytrope,
-  `Chandrasekhar.MassLimit,
-  `Chandrasekhar.Main
+  "Chandrasekhar.Basic",
+  "Chandrasekhar.EquationOfState",
+  "Chandrasekhar.Polytrope",
+  "Chandrasekhar.MassLimit",
+  "Chandrasekhar.Main"
 ]
