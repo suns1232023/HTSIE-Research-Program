@@ -9,4 +9,11 @@ rev = "v4.14.0"
 
 [[lean_lib]]
 name = "HTSIEChandrasekhar"
-globs = ["HTSIEChandrasekhar", "Chandrasekhar.**"]
+srcDir = "."
+roots = [
+  `Chandrasekhar.Basic,
+  `Chandrasekhar.EquationOfState,
+  `Chandrasekhar.Polytrope,
+  `Chandrasekhar.MassLimit,
+  `Chandrasekhar.Main
+]
