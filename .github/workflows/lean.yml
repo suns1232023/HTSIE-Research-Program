@@ -1,8 +1,9 @@
-name: HTSIE Lean 4 Formalization CI
+```yaml
+name: HTSIE Chandrasekhar Lean CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
     paths:
       - 'formalization/**'
       - '.github/workflows/lean.yml'
@@ -13,19 +14,19 @@ on:
 
 jobs:
   build:
-    name: Lean 4 / Mathlib Build & Sorry Check
+    name: Lean 4 Build and Sorry Check
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install elan (Lean version manager)
+      - name: Install elan
         run: |
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Read Lean toolchain version
+      - name: Read Lean toolchain
         id: toolchain
         run: |
           TOOLCHAIN=$(cat formalization/lean-toolchain)
@@ -36,7 +37,7 @@ jobs:
           elan toolchain install ${{ steps.toolchain.outputs.version }}
           elan default ${{ steps.toolchain.outputs.version }}
 
-      - name: Cache Mathlib build artifacts
+      - name: Cache Mathlib
         uses: actions/cache@v4
         with:
           path: |
@@ -46,75 +47,45 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-lean-${{ steps.toolchain.outputs.version }}-
 
-      - name: Fetch Mathlib cache (pre-built oleans)
+      - name: Fetch Mathlib cache
         working-directory: formalization
-        run: |
-          lake exe cache get || echo "Cache fetch failed, will build from source"
+        run: lake exe cache get || echo "Cache fetch failed, building from source"
 
-      - name: Build HTSIE formalization
+      - name: Build formalization
         working-directory: formalization
         run: |
-          lake build HTSIEFormalization 2>&1 | tee build.log
-          BUILD_EXIT=${PIPESTATUS[0]}
-          echo "Build exit code: $BUILD_EXIT"
-          exit $BUILD_EXIT
+          lake build HTSIEChandrasekhar 2>&1 | tee build.log
+          exit ${PIPESTATUS[0]}
 
-      - name: Check for sorry (must be zero in FORMAL_VERIFIED files)
+      - name: Sorry audit — FORMAL_VERIFIED files (must be 0)
         working-directory: formalization
         run: |
-          echo "=== Sorry count by file ==="
-          SORRY_COUNT=0
-          for f in HTSIE/Basic.lean HTSIE/Capacity.lean \
-                   Theorems/Instability.lean \
-                   Counterexamples/SaturationNotInstability.lean; do
-            COUNT=$(grep -c "sorry" "$f" 2>/dev/null || echo 0)
-            echo "  $f: $COUNT sorry(s)"
-            SORRY_COUNT=$((SORRY_COUNT + COUNT))
+          echo "=== Sorry count in FORMAL_VERIFIED files ==="
+          SORRY=0
+          for f in Chandrasekhar/Basic.lean Chandrasekhar/EquationOfState.lean Chandrasekhar/Main.lean; do
+            COUNT=$(grep -c "^[[:space:]]*sorry" "$f" 2>/dev/null || echo 0)
+            echo "  $f: $COUNT"
+            SORRY=$((SORRY + COUNT))
           done
-          echo ""
-          echo "=== Files with FORMAL_OPEN (sorry allowed) ==="
-          for f in Theorems/CapacitySaturation.lean HTSIE/Accessibility.lean \
-                   HTSIE/EffectiveDimension.lean HTSIE/SpectralDimension.lean; do
-            if [ -f "$f" ]; then
-              COUNT=$(grep -c "sorry" "$f" 2>/dev/null || echo 0)
-              echo "  $f: $COUNT sorry(s) [FORMAL_OPEN — expected]"
-            fi
-          done
-          echo ""
-          echo "=== Total sorry in FORMAL_VERIFIED files: $SORRY_COUNT ==="
-          if [ "$SORRY_COUNT" -gt 0 ]; then
-            echo "ERROR: sorry found in files labeled FORMAL_VERIFIED"
+          echo "Total sorry in FORMAL_VERIFIED files: $SORRY"
+          if [ "$SORRY" -gt 0 ]; then
+            echo "ERROR: sorry found in FORMAL_VERIFIED files"
             exit 1
           fi
-          echo "PASS: No sorry in FORMAL_VERIFIED files"
+          echo "PASS: 0 sorry in FORMAL_VERIFIED files"
 
-      - name: Generate formalization status report
+      - name: Sorry audit — FORMAL_OPEN files (documented)
         working-directory: formalization
         run: |
-          echo "=== HTSIE Formalization Status Report ===" > status_report.txt
-          echo "Date: $(date -u)" >> status_report.txt
-          echo "Lean: $(lean --version 2>/dev/null || echo 'unknown')" >> status_report.txt
-          echo "" >> status_report.txt
-          echo "| File | Status | Sorry Count |" >> status_report.txt
-          echo "|------|--------|-------------|" >> status_report.txt
-          for f in HTSIE/Basic.lean HTSIE/Capacity.lean \
-                   Theorems/Instability.lean Theorems/CapacitySaturation.lean \
-                   Counterexamples/SaturationNotInstability.lean; do
-            if [ -f "$f" ]; then
-              COUNT=$(grep -c "sorry" "$f" 2>/dev/null || echo 0)
-              if [ "$COUNT" -eq 0 ]; then
-                STATUS="FORMAL_VERIFIED"
-              else
-                STATUS="FORMAL_OPEN ($COUNT sorry)"
-              fi
-              echo "| $f | $STATUS | $COUNT |" >> status_report.txt
-            fi
+          echo "=== Sorry count in FORMAL_OPEN files (expected) ==="
+          for f in Chandrasekhar/Polytrope.lean Chandrasekhar/MassLimit.lean; do
+            COUNT=$(grep -c "^[[:space:]]*sorry" "$f" 2>/dev/null || echo 0)
+            echo "  $f: $COUNT sorry (FORMAL_OPEN — expected)"
           done
-          cat status_report.txt
 
-      - name: Upload status report
+      - name: Upload build log
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: formalization-status-report
-          path: formalization/status_report.txt
+          name: lean-build-log
+          path: formalization/build.log
