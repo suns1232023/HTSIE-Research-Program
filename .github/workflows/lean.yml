@@ -1,1 +1,120 @@
+name: HTSIE Lean 4 Formalization CI
 
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'formalization/**'
+      - '.github/workflows/lean.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'formalization/**'
+
+jobs:
+  build:
+    name: Lean 4 / Mathlib Build & Sorry Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install elan (Lean version manager)
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Read Lean toolchain version
+        id: toolchain
+        run: |
+          TOOLCHAIN=$(cat formalization/lean-toolchain)
+          echo "version=$TOOLCHAIN" >> $GITHUB_OUTPUT
+
+      - name: Install Lean toolchain
+        run: |
+          elan toolchain install ${{ steps.toolchain.outputs.version }}
+          elan default ${{ steps.toolchain.outputs.version }}
+
+      - name: Cache Mathlib build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            formalization/.lake
+            ~/.elan/toolchains
+          key: ${{ runner.os }}-lean-${{ steps.toolchain.outputs.version }}-${{ hashFiles('formalization/lakefile.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-lean-${{ steps.toolchain.outputs.version }}-
+
+      - name: Fetch Mathlib cache (pre-built oleans)
+        working-directory: formalization
+        run: |
+          lake exe cache get || echo "Cache fetch failed, will build from source"
+
+      - name: Build HTSIE formalization
+        working-directory: formalization
+        run: |
+          lake build HTSIEFormalization 2>&1 | tee build.log
+          BUILD_EXIT=${PIPESTATUS[0]}
+          echo "Build exit code: $BUILD_EXIT"
+          exit $BUILD_EXIT
+
+      - name: Check for sorry (must be zero in FORMAL_VERIFIED files)
+        working-directory: formalization
+        run: |
+          echo "=== Sorry count by file ==="
+          SORRY_COUNT=0
+          for f in HTSIE/Basic.lean HTSIE/Capacity.lean \
+                   Theorems/Instability.lean \
+                   Counterexamples/SaturationNotInstability.lean; do
+            COUNT=$(grep -c "sorry" "$f" 2>/dev/null || echo 0)
+            echo "  $f: $COUNT sorry(s)"
+            SORRY_COUNT=$((SORRY_COUNT + COUNT))
+          done
+          echo ""
+          echo "=== Files with FORMAL_OPEN (sorry allowed) ==="
+          for f in Theorems/CapacitySaturation.lean HTSIE/Accessibility.lean \
+                   HTSIE/EffectiveDimension.lean HTSIE/SpectralDimension.lean; do
+            if [ -f "$f" ]; then
+              COUNT=$(grep -c "sorry" "$f" 2>/dev/null || echo 0)
+              echo "  $f: $COUNT sorry(s) [FORMAL_OPEN — expected]"
+            fi
+          done
+          echo ""
+          echo "=== Total sorry in FORMAL_VERIFIED files: $SORRY_COUNT ==="
+          if [ "$SORRY_COUNT" -gt 0 ]; then
+            echo "ERROR: sorry found in files labeled FORMAL_VERIFIED"
+            exit 1
+          fi
+          echo "PASS: No sorry in FORMAL_VERIFIED files"
+
+      - name: Generate formalization status report
+        working-directory: formalization
+        run: |
+          echo "=== HTSIE Formalization Status Report ===" > status_report.txt
+          echo "Date: $(date -u)" >> status_report.txt
+          echo "Lean: $(lean --version 2>/dev/null || echo 'unknown')" >> status_report.txt
+          echo "" >> status_report.txt
+          echo "| File | Status | Sorry Count |" >> status_report.txt
+          echo "|------|--------|-------------|" >> status_report.txt
+          for f in HTSIE/Basic.lean HTSIE/Capacity.lean \
+                   Theorems/Instability.lean Theorems/CapacitySaturation.lean \
+                   Counterexamples/SaturationNotInstability.lean; do
+            if [ -f "$f" ]; then
+              COUNT=$(grep -c "sorry" "$f" 2>/dev/null || echo 0)
+              if [ "$COUNT" -eq 0 ]; then
+                STATUS="FORMAL_VERIFIED"
+              else
+                STATUS="FORMAL_OPEN ($COUNT sorry)"
+              fi
+              echo "| $f | $STATUS | $COUNT |" >> status_report.txt
+            fi
+          done
+          cat status_report.txt
+
+      - name: Upload status report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: formalization-status-report
+          path: formalization/status_report.txt
