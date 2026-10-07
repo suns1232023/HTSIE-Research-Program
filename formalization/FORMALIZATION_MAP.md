@@ -1,36 +1,44 @@
-# LEGACY_INVENTORY.md
+# FORMALIZATION_MAP.md
 
-## Repository Lean File Inventory
+## Mathematical-to-Lean Mapping
 
-**Date**: 2026-10-07
-**Repository**: suns1232023/HTSIE-Research-Program
+This table maps every mathematical statement in the preprint
+to its corresponding Lean declaration.
 
-## Current Status
+| ID | Mathematical Statement | Lean Declaration | File | Evidence |
+|---|---|---|---|---|
+| CH-DEF-01 | Physical parameters (G, ħ, c, m_e, m_H, μ_e > 0) | `ChandrasekharParams` | Basic.lean | [FORMAL_DEF] |
+| CH-DEF-02 | EOS coefficient K = f(ħ, c, μ_e, m_H) | `eosCoefficient` | Basic.lean | [FORMAL_DEF] |
+| CH-DEF-03 | Polytropic EOS: P = K·ρ^(1+1/n) | `polytropicEOS` | EquationOfState.lean | [FORMAL_DEF] |
+| CH-DEF-04 | Ultra-relativistic EOS: P = K·ρ^(4/3) | `ultraRelativisticEOS` | EquationOfState.lean | [FORMAL_DEF] |
+| CH-DEF-05 | Lane-Emden equation (pointwise) | `LaneEmdenEq` | Polytrope.lean | [FORMAL_DEF] |
+| CH-DEF-06 | Lane-Emden boundary conditions | `LaneEmdenBC` | Polytrope.lean | [FORMAL_DEF] |
+| CH-DEF-07 | Lane-Emden solution | `IsLaneEmdenSolution` | Polytrope.lean | [FORMAL_DEF] |
+| CH-DEF-08 | Stellar surface (first zero ξ₁) | `StellarSurface` | Polytrope.lean | [FORMAL_DEF] |
+| CH-DEF-09 | Lane-Emden constant ξ₁²\|θ'(ξ₁)\| | `laneEmdenConstant` | Polytrope.lean | [FORMAL_DEF] |
+| CH-DEF-10 | Chandrasekhar mass formula | `chandrasekharMassFormula` | MassLimit.lean | [FORMAL_DEF] |
+| CH-DEF-11 | Chandrasekhar mass (physical) | `chandrasekharMass` | MassLimit.lean | [FORMAL_DEF] |
+| CH-DEF-12 | Chandrasekhar model structure | `ChandrasekharModel` | Main.lean | [FORMAL_DEF] |
+| CH-THM-01 | K > 0 | `eosCoefficient_pos` | Basic.lean | [FORMAL_VERIFIED] |
+| CH-THM-02 | Ultra-relativistic EOS = n=3 polytrope | `ultraRelativistic_is_polytrope_n3` | EquationOfState.lean | [FORMAL_VERIFIED] |
+| CH-THM-03 | 1 + 1/3 = 4/3 | `ultraRelativistic_polytrope_index` | EquationOfState.lean | [FORMAL_VERIFIED] |
+| CH-THM-04 | 1 - 3·(1/3) = 0 (density independence) | `n3_mass_exponent_on_rho_c` | MassLimit.lean | [FORMAL_VERIFIED] |
+| CH-THM-05 | M_Ch > 0 | `chandrasekharMass_pos` | MassLimit.lean | [FORMAL_VERIFIED] |
+| CH-THM-06 | M_Ch exists and is positive (main theorem) | `chandrasekhar_limit_exists_and_positive` | Main.lean | [FORMAL_VERIFIED] |
+| CH-OPN-01 | Lane-Emden solution exists for n=3 | `laneEmden_n3_exists` | Polytrope.lean | [FORMAL_OPEN] |
+| CH-OPN-02 | Full mass formula derivation | `n3_mass_independent_of_central_density` | MassLimit.lean | [FORMAL_OPEN] |
+| CH-PHY-01 | Physical interpretation of M_Ch | — | — | [PHYSICAL_OPEN] |
+| CH-CON-01 | HTSIE interpretation of Chandrasekhar limit | — | — | [CONJECTURE] |
+| CH-EST-01 | Classical Chandrasekhar derivation (1931) | — | Literature | [ESTABLISHED] |
+| CH-EST-02 | M_Ch ≈ 1.44 M_☉ for μ_e = 2 | — | Literature | [ESTABLISHED] |
 
-As of this inventory, the repository contains **no pre-existing Lean files**.
-The formalization layer is being created fresh in this commit series.
+## Formalization Level
 
-## Existing Non-Lean Mathematical Content
+**Current level: Level 3** — Mathematical derivation formalized.
 
-| File | Mathematical Content | Relevance to Formalization |
+| Level | Description | Achieved |
 |---|---|---|
-| htsie_2(数学骨架).md | SII, DFFI, EDI definitions; HTSIE inequality | Primary source for formal definitions |
-| htsie_5(跨学科应用).md | Compact stars, Chandrasekhar limit discussion | Physical context |
-| htsie_1(理论基础).md | Core HTSIE hypothesis chain | Background for constraint definitions |
-
-## Formalization Scope Decision
-
-- **Primary target**: Chandrasekhar mass limit (mathematical derivation)
-- **Rationale**: Well-defined mathematical structure; no prior peer-reviewed Lean formalization identified
-- **HTSIE connection**: Treated as an independent formal case study, NOT as proof of HTSIE
-
-## Evidence Classification
-
-| Label | Meaning |
-|---|---|
-| [FORMAL_DEF] | Lean definition exists |
-| [FORMAL_VERIFIED] | Compiles, no sorry, axiom-audited |
-| [FORMAL_OPEN] | Incomplete proof (sorry present, documented) |
-| [CONJECTURE] | Research hypothesis |
-| [PHYSICAL_OPEN] | Physical interpretation unestablished |
-| [ESTABLISHED] | Known result from literature |
+| 1 | Numerical verification of known formula | YES |
+| 2 | Algebraic formalization of formula | YES |
+| 3 | Formalization of mathematical derivation | YES (partial) |
+| 4 | Physical assumptions → full derivation | NO (Lane-Emden ODE open) |
