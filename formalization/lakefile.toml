@@ -1,5 +1,5 @@
 name = "HTSIEFormalization"
-version = "0.1.0"
+version = "0.2.0"
 defaultTargets = ["HTSIEFormalization"]
 
 [[require]]
@@ -10,4 +10,10 @@ rev = "v4.14.0"
 
 [[lean_lib]]
 name = "HTSIEFormalization"
-globs = ["HTSIE/**", "Theorems/**", "Counterexamples/**"]
+globs = [
+  "HTSIE/**",
+  "Measures/**",
+  "Theorems/**",
+  "Counterexamples/**",
+  "Applications/**"
+]
