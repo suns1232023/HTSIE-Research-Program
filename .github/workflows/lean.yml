@@ -1,41 +1,40 @@
-```yaml
-name: HTSIE Chandrasekhar Lean CI
+name: HTSIE Lean CI
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
     paths:
       - 'formalization/**'
       - '.github/workflows/lean.yml'
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
     paths:
       - 'formalization/**'
 
 jobs:
   build:
-    name: Lean 4 Build and Sorry Check
+    name: Lean 4 Build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Install elan
         run: |
-          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
-          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
-      - name: Read Lean toolchain
-        id: toolchain
-        run: |
-          TOOLCHAIN=$(cat formalization/lean-toolchain)
-          echo "version=$TOOLCHAIN" >> $GITHUB_OUTPUT
+      - name: Read toolchain
+        id: tc
+        run: echo "version=$(cat formalization/lean-toolchain)" >> "$GITHUB_OUTPUT"
 
       - name: Install Lean toolchain
         run: |
-          elan toolchain install ${{ steps.toolchain.outputs.version }}
-          elan default ${{ steps.toolchain.outputs.version }}
+          elan toolchain install "${{ steps.tc.outputs.version }}"
+          elan default "${{ steps.tc.outputs.version }}"
 
       - name: Cache Mathlib
         uses: actions/cache@v4
@@ -43,49 +42,49 @@ jobs:
           path: |
             formalization/.lake
             ~/.elan/toolchains
-          key: ${{ runner.os }}-lean-${{ steps.toolchain.outputs.version }}-${{ hashFiles('formalization/lakefile.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-lean-${{ steps.toolchain.outputs.version }}-
+          key: lean-${{ steps.tc.outputs.version }}-${{ hashFiles('formalization/lakefile.toml') }}
+          restore-keys: lean-${{ steps.tc.outputs.version }}-
 
       - name: Fetch Mathlib cache
         working-directory: formalization
-        run: lake exe cache get || echo "Cache fetch failed, building from source"
+        run: lake exe cache get || true
 
-      - name: Build formalization
+      - name: Build
+        working-directory: formalization
+        run: lake build HTSIEChandrasekhar
+
+      - name: Sorry audit (FORMAL_VERIFIED files must have 0 sorry)
         working-directory: formalization
         run: |
-          lake build HTSIEChandrasekhar 2>&1 | tee build.log
-          exit ${PIPESTATUS[0]}
-
-      - name: Sorry audit — FORMAL_VERIFIED files (must be 0)
-        working-directory: formalization
-        run: |
-          echo "=== Sorry count in FORMAL_VERIFIED files ==="
           SORRY=0
           for f in Chandrasekhar/Basic.lean Chandrasekhar/EquationOfState.lean Chandrasekhar/Main.lean; do
-            COUNT=$(grep -c "^[[:space:]]*sorry" "$f" 2>/dev/null || echo 0)
-            echo "  $f: $COUNT"
-            SORRY=$((SORRY + COUNT))
+            if [ -f "$f" ]; then
+              N=$(grep -c "^[[:space:]]*sorry" "$f" || true)
+              echo "$f: $N sorry"
+              SORRY=$((SORRY + N))
+            fi
           done
           echo "Total sorry in FORMAL_VERIFIED files: $SORRY"
           if [ "$SORRY" -gt 0 ]; then
-            echo "ERROR: sorry found in FORMAL_VERIFIED files"
+            echo "FAIL: sorry found in FORMAL_VERIFIED files"
             exit 1
           fi
-          echo "PASS: 0 sorry in FORMAL_VERIFIED files"
+          echo "PASS"
 
-      - name: Sorry audit — FORMAL_OPEN files (documented)
+      - name: Sorry audit (FORMAL_OPEN files — informational)
         working-directory: formalization
         run: |
-          echo "=== Sorry count in FORMAL_OPEN files (expected) ==="
           for f in Chandrasekhar/Polytrope.lean Chandrasekhar/MassLimit.lean; do
-            COUNT=$(grep -c "^[[:space:]]*sorry" "$f" 2>/dev/null || echo 0)
-            echo "  $f: $COUNT sorry (FORMAL_OPEN — expected)"
+            if [ -f "$f" ]; then
+              N=$(grep -c "^[[:space:]]*sorry" "$f" || true)
+              echo "$f: $N sorry [FORMAL_OPEN — expected]"
+            fi
           done
 
       - name: Upload build log
-        uses: actions/upload-artifact@v4
         if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: lean-build-log
           path: formalization/build.log
+          if-no-files-found: ignore
