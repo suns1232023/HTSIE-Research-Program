@@ -10,4 +10,4 @@ rev = "v4.14.0"
 
 [[lean_lib]]
 name = "HTSIEChandrasekhar"
-globs = ["Chandrasekhar/**"]
+globs = ["Chandrasekhar.+"]
