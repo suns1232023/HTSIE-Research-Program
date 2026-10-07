@@ -102,19 +102,5 @@ lemma deriv_infoEnergyProduct (C : ℝ → ℝ) (E : ℝ)
   unfold infoEnergyProduct
   have hid : DifferentiableAt ℝ id E := differentiableAt_id
   rw [deriv_mul hid hC]
-  simp [deriv_id']
-
-/--
-  Key observation: C'(E) ≤ 1/E does NOT imply F'(E) < 0
-  when C(E) > 0.
-
-  Proof: F'(E) = C(E) + E·C'(E) ≥ C(E) + E·(-∞) is not bounded below
-  by C'(E) ≤ 1/E alone. The term C(E) > 0 can dominate.
-
-  This is documented as a remark, not a Lean theorem,
-  because the counterexample is in SaturationNotInstability.lean.
--/
--- Remark: The inference C'(E) ≤ 1/E ⟹ F'(E) < 0 is INVALID.
--- See Counterexamples/SaturationNotInstability.lean for a formal refutation.
-
-end
+  simp
+  ring
