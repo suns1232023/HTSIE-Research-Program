@@ -1,183 +1,200 @@
-# HTSIE Lean 4 Formalization Layer
+# HTSIE Lean 4 Formalization Layer (v0.2)
 
 ## 1. Purpose
 
-This formalization layer serves as a **mathematical pressure-test tool** for HTSIE propositions, NOT as a confirmation layer.
+This formalization layer serves as a **mathematical pressure-test and audit tool** for HTSIE propositions.
 
-The primary objective is to identify:
-1. Which definitions can be expressed rigorously
-2. Which propositions can be proved from stated hypotheses
-3. Which propositions require additional assumptions
-4. Which propositions are actually **false** (with formal counterexamples)
-5. Which parts remain mathematically open
+**Principle**: Lean is a PRESSURE-TEST tool, NOT a confirmation tool.
+A formally verified counterexample is a **successful research result** — it identifies an insufficient assumption and guides theory refinement.
 
-> **Key principle**: A formally verified counterexample to a proposed HTSIE implication is a **successful research result** — it identifies an insufficient assumption and guides theory refinement.
+**Architecture** (from memo analysis):
+```
+HTSIE Mathematical Core → Formal Verification → Physical Instantiations
+```
+NOT: `Chandrasekhar → HTSIE` (this direction is physically unmotivated)
 
-## 2. Formalization Scope
+## 2. Directory Structure
 
-This first phase covers the **information-capacity instability** component of HTSIE:
+```
+formalization/
+├── HTSIE/                          # Core mathematical framework (P0)
+│   ├── Basic.lean                  # HTSIESystem, ConstraintMonotone, DOFMeasure
+│   ├── Constraint.lean             # Constraint ordering, when monotonicity holds/fails
+│   └── Accessibility.lean          # A(c₂) ⊆ A(c₁) theorem and counterexamples
+├── Measures/                       # The three HTSIE measures (P0)
+│   ├── SII.lean                    # Structural Information Index
+│   ├── DFFI.lean                   # Degree of Freedom Freezing Index
+│   └── EDI.lean                    # Effective Dimension Index
+├── Theorems/                       # Core mathematical results (P0-P1)
+│   ├── ConstraintReduction.lean    # Full chain: constraint → SII↓, EDI↓, DFFI↑
+│   ├── HTSIEInequality.lean        # HTSIE inequality formulations
+│   ├── Instability.lean            # Corrected instability theorem [FORMAL_VERIFIED]
+│   └── CapacitySaturation.lean     # Saturation properties [FORMAL_OPEN]
+├── Counterexamples/                # Formal refutations (P0)
+│   └── SaturationNotInstability.lean  # C(E)=1 refutes original conjecture
+├── Applications/                   # Physical instantiations (P1)
+│   └── Chandrasekhar.lean          # Compact-star model as HTSIE application
+├── README.md                       # This file
+├── lakefile.toml                   # Lean 4 + Mathlib v4.14.0
+└── lean-toolchain                  # Pinned toolchain
+```
 
-- Abstract information capacity function `C : ℝ → ℝ`
-- Information-energy product `F(E) = E * C(E)`
-- Capacity saturation condition
-- Instability condition
-- Relationship between saturation and instability
+## 3. Priority Levels
 
-**Out of scope (Phase 1)**: spectral dimension flow, accessibility transition, cross-system universality, physical interpretations.
-
-## 3. Mathematical Definitions
-
-| Definition | Lean Name | Mathematical Content |
+| Priority | Content | Lean Value |
 |---|---|---|
-| Positive capacity | `PositiveCapacity` | `∀ E > 0, C(E) > 0` |
-| Capacity saturation | `CapacitySaturation` | `∀ E > 0, E·C'(E) ≤ 1` |
-| Strict saturation at E | `StrictSaturationAt` | `E > 0 ∧ E·C'(E) < 1` |
-| Instability at E₀ | `InstabilityAt` | `∃ E > E₀, E·C(E) < E₀·C(E₀)` |
-| Negative product derivative | `NegativeProductDerivAt` | `C(E) + E·C'(E) < 0` |
-| Negative product deriv above E₀ | `NegativeProductDerivAbove` | `∀ E > E₀, C(E) + E·C'(E) < 0` |
-| Info-energy product | `infoEnergyProduct` | `F(E) = E * C(E)` |
+| P0 | Constraint, Accessible State Space, Effective DOF, SII, DFFI, EDI, HTSIE Inequality | ★★★★★ |
+| P1 | Monotonicity bounds, Counterexamples, Spectral Dimension, Chandrasekhar | ★★★★☆ |
+| P2 | Black-hole application, SAE connections | ★★★☆☆ |
+| P3 | LLM scaling interpretation, Cross-system universality | ★☆☆☆☆ (keep as [CONJECTURE]) |
 
-## 4. Verified Theorems
+## 4. Core Mathematical Definitions
 
-### [FORMAL_VERIFIED] Derivative Identity
-**File**: `HTSIE/Basic.lean` — `deriv_infoEnergyProduct`
+### Layer 0: Abstract Framework
 
+| Definition | Lean Name | Mathematical Content | Status |
+|---|---|---|---|
+| HTSIE System | `HTSIESystem` | State space S, constraint type C, accessibility A: C → Set S | [FORMAL_VERIFIED] |
+| Constraint Monotonicity | `ConstraintMonotone` | c₁ ≤ c₂ ⟹ A(c₂) ⊆ A(c₁) | [FORMAL_VERIFIED] |
+| DOF Measure | `DOFMeasure` | Abstract measure of state space "size" | [FORMAL_VERIFIED] |
+| Info Measure | `InfoMeasure` | Abstract information measure | [FORMAL_VERIFIED] |
+| HTSIE Chain | `HTSIEChain` | Conjunction of all three links | [FORMAL_VERIFIED] |
+
+### Layer 1: The Three HTSIE Measures
+
+| Measure | Definition | Key Property | Status |
+|---|---|---|---|
+| SII | `SIIMeasure` | log-cardinality or entropy of A(c) | [FORMAL_VERIFIED] (log-card) |
+| DFFI | `DFFIMeasure` | 1 - \|A(c)\| / \|S\| | [FORMAL_VERIFIED] (finite) |
+| EDI | `EDIMeasure` | log-cardinality or spectral dim of A(c) | [FORMAL_VERIFIED] (log-card) |
+
+### Layer 2: Capacity Instability (Special Case)
+
+| Definition | Lean Name | Mathematical Content | Status |
+|---|---|---|---|
+| Positive capacity | `PositiveCapacity` | ∀ E > 0, C(E) > 0 | [FORMAL_VERIFIED] |
+| Capacity saturation | `CapacitySaturation` | ∀ E > 0, E·C'(E) ≤ 1 | [FORMAL_VERIFIED] |
+| Instability at E₀ | `InstabilityAt` | ∃ E > E₀, E·C(E) < E₀·C(E₀) | [FORMAL_VERIFIED] |
+| Negative product deriv | `NegativeProductDerivAbove` | ∀ E > E₀, C(E) + E·C'(E) < 0 | [FORMAL_VERIFIED] |
+
+## 5. Verified Theorems
+
+### [FORMAL_VERIFIED] HTSIE Chain End-to-End
+**File**: `HTSIE/Basic.lean` — `htsie_chain_end_to_end`
 ```
-F(E) = E * C(E)  ⟹  F'(E) = C(E) + E * C'(E)
+HTSIEChain ∧ c₁ ≤ c₂  ⟹  info(A(c₂)) ≤ info(A(c₁))
 ```
 
-This is the product rule, stated explicitly to make the structure transparent.
+### [FORMAL_VERIFIED] Accessibility Reduction
+**File**: `HTSIE/Accessibility.lean` — `accessibility_reduction`
+```
+ConstraintMonotone ∧ c₁ ≤ c₂  ⟹  A(c₂) ⊆ A(c₁)
+```
 
----
+### [FORMAL_VERIFIED] Full HTSIE Constraint Reduction
+**File**: `Theorems/ConstraintReduction.lean` — `htsie_constraint_reduction`
+```
+ConstraintMonotone ∧ SIIMeasure ∧ EDIMeasure ∧ DFFIMeasure ∧ c₁ ≤ c₂
+⟹  SII(A(c₂)) ≤ SII(A(c₁))  ∧  EDI(A(c₂)) ≤ EDI(A(c₁))  ∧  DFFI(c₁) ≤ DFFI(c₂)
+```
+
+### [FORMAL_VERIFIED] SII Monotonicity (log-cardinality)
+**File**: `Measures/SII.lean` — `SII_cardinality_monotone`
+```
+A₂ ⊆ A₁  ⟹  SII_logcard(A₂) ≤ SII_logcard(A₁)
+```
+
+### [FORMAL_VERIFIED] DFFI Bounds
+**File**: `Measures/DFFI.lean` — `DFFI_finite_bounds`
+```
+accessible ≤ total  ⟹  0 ≤ DFFI ≤ 1
+```
+
+### [FORMAL_VERIFIED] EDI Monotonicity (log-cardinality)
+**File**: `Measures/EDI.lean` — `EDI_logcard_monotone`
+```
+A₂ ⊆ A₁  ⟹  EDI_logcard(A₂) ≤ EDI_logcard(A₁)
+```
 
 ### [FORMAL_VERIFIED] Corrected Instability Theorem
 **File**: `Theorems/Instability.lean` — `htsie_instability_corrected`
-
 ```
-C ∈ C¹(E₀, ∞)  ∧  C continuous on [E₀, ∞)  ∧  C(E) > 0
-∧  ∀ E > E₀, C(E) + E·C'(E) < 0
+C ∈ C¹(E₀,∞)  ∧  C(E) > 0  ∧  ∀ E > E₀, C(E) + E·C'(E) < 0
 ⟹  InstabilityAt C E₀
 ```
 
-**Proof structure**:
-1. `deriv_infoEnergyProduct`: F'(E) = C(E) + E·C'(E)
-2. `strictly_decreasing_of_neg_deriv`: F'(E) < 0 ⟹ F strictly decreasing (MVT)
-3. `instability_of_product_decrease`: F strictly decreasing ⟹ InstabilityAt
-
----
-
-### [FORMAL_VERIFIED] Explicit Instability Witness
-**File**: `Theorems/Instability.lean` — `explicit_instability_witness`
-
+### [FORMAL_VERIFIED] ConstraintMonotone Can Fail
+**File**: `HTSIE/Constraint.lean` — `constraint_monotone_can_fail`
 ```
-∀ E₁ > E₀, NegativeProductDerivAbove C E₀
-⟹  E₁ * C(E₁) < E₀ * C(E₀)
+∃ sys : HTSIESystem ℕ ℕ, ¬ ConstraintMonotone sys
 ```
 
----
-
-### [FORMAL_VERIFIED] NegativeProductDeriv ⟹ StrictSaturation
-**File**: `HTSIE/Capacity.lean` — `neg_product_deriv_implies_strict_saturation`
-
-```
-C(E) > 0  ∧  C(E) + E·C'(E) < 0  ⟹  StrictSaturationAt C E
-```
-
-The converse is FALSE (see counterexample below).
-
----
-
-### [FORMAL_VERIFIED] NegativeProductDeriv ⟹ C'(E) < 0
-**File**: `Theorems/CapacitySaturation.lean` — `neg_product_deriv_implies_neg_capacity_deriv`
-
-```
-C(E) > 0  ∧  E > 0  ∧  C(E) + E·C'(E) < 0  ⟹  C'(E) < 0
-```
-
-Instability requires capacity to be **strictly decreasing**.
-
-## 5. Formal Counterexamples
+## 6. Formal Counterexamples
 
 ### [FORMAL_COUNTEREXAMPLE] CapacitySaturation ⊬ InstabilityAt
 **File**: `Counterexamples/SaturationNotInstability.lean` — `saturation_not_instability`
 
-**Counterexample**: `C(E) = 1` (constant function)
+**Counterexample**: C(E) = 1 (constant)
 
-| Property | Value | Holds? |
-|---|---|---|
-| `PositiveCapacity` | C(E) = 1 > 0 | ✓ |
-| `CapacitySaturation` | E·0 = 0 ≤ 1 | ✓ |
-| `StrictSaturationAt` | E·0 = 0 < 1 | ✓ |
-| `InstabilityAt` | E·1 = E (increasing!) | ✗ **REFUTED** |
-
-**Conclusion**: The original HTSIE conjecture
-```
-CapacitySaturation ∧ StrictSaturation ⟹ InstabilityAt
-```
-is **INVALID**. The missing assumption is `NegativeProductDerivAbove`.
+| Property | Holds? |
+|---|---|
+| PositiveCapacity | ✓ |
+| CapacitySaturation (E·0 = 0 ≤ 1) | ✓ |
+| StrictSaturationAt | ✓ |
+| InstabilityAt (F(E) = E is INCREASING) | ✗ **REFUTED** |
 
 **Critical error in original formulation**:
 ```
 C'(E) ≤ 1/E  ⟹  F'(E) < 0   ← FALSE when C(E) > 0
 ```
-The product rule gives F'(E) = C(E) + E·C'(E), and C(E) > 0 prevents
-the conclusion F'(E) < 0 from C'(E) ≤ 1/E alone.
+Product rule: F'(E) = C(E) + E·C'(E). The term C(E) > 0 prevents F'(E) < 0.
 
-## 6. Open Problems
+### [FORMAL_COUNTEREXAMPLE] ConstraintMonotone Can Fail
+**File**: `HTSIE/Constraint.lean` — `constraint_monotone_can_fail`
 
-| Proposition | Status | Missing Assumption |
+**Counterexample**: A(n) = {n+1} (non-monotone accessibility)
+
+## 7. Open Problems
+
+| Problem | Status | Missing Assumption |
 |---|---|---|
-| Accessibility reduction formalization | [FORMAL_OPEN] | Operational definition of accessible states |
-| Effective-dimension transition | [FORMAL_OPEN] | Connection to spectral theory |
-| Spectral-dimension flow | [FORMAL_OPEN] | Discrete-to-continuum limit |
+| Spectral dimension is EDI measure | [FORMAL_OPEN] | Heat kernel / random walk formalism |
+| DFFI ↑ ⟹ DOF ↓ (general) | [FORMAL_OPEN] | Compatibility condition needed |
+| Quantitative HTSIE inequality | [FORMAL_OPEN] | Specific model required |
+| Differential HTSIE inequality (dSII/dc ≤ 0) | [FORMAL_OPEN] | Differentiability of SII in c |
+| Chandrasekhar limit = HTSIE instability | [FORMAL_OPEN] | Physical C(E) definition |
+| CapacitySaturation scaling (α ≤ 1) | [FORMAL_OPEN] | Additional hypothesis |
 | Cross-system universality | [CONJECTURE] | No mathematical formulation yet |
-| CapacitySaturation scaling (α ≤ 1) | [FORMAL_OPEN] | Additional hypothesis needed |
 
-## 7. Physical Interpretations Not Yet Formalized
+## 8. Physical Interpretations Not Yet Formalized
 
-The following are **research hypotheses** or **physical interpretations**.
-They are NOT encoded as mathematical axioms in this formalization:
+The following are **research hypotheses** or **physical interpretations** — NOT mathematical axioms:
 
-- "Chandrasekhar limit is fundamentally information-capacity saturation"
-- "Degeneracy pressure is exactly an information gradient"
-- "Three-dimensional phase-space capacity is the physical origin of the Chandrasekhar limit"
-- "The HTSIE chain is universal across condensed matter, compact stars, black holes, SAE, and LLMs"
+- "Chandrasekhar limit is fundamentally information-capacity saturation" → [PHYSICAL_OPEN] (CapacitySaturation is INSUFFICIENT; correct condition is NegativeProductDerivAbove)
+- "Degeneracy pressure is exactly an information gradient" → [PHYSICAL_OPEN]
+- "Three-dimensional phase-space capacity is the physical origin of the Chandrasekhar limit" → [PHYSICAL_OPEN]
+- "HTSIE chain is universal across condensed matter, compact stars, black holes, SAE, LLMs" → [CONJECTURE]
+- "LLM scaling follows HTSIE" → [CONJECTURE] (empirical observation + HTSIE interpretation, not a mathematical theorem)
 
-These remain in the `[PHYSICAL_OPEN]` or `[CONJECTURE]` category.
-
-## 8. Lean / Mathlib Version
+## 9. Lean / Mathlib Version
 
 | Component | Version |
 |---|---|
 | Lean 4 | v4.14.0 |
 | Mathlib | v4.14.0 |
-| elan | latest |
 
-See `lean-toolchain` for the pinned toolchain.
-
-## 9. Reproducibility
+## 10. Reproducibility
 
 ```bash
-# Clone and build from scratch
 git clone https://github.com/suns1232023/HTSIE-Research-Program
 cd HTSIE-Research-Program/formalization
-
-# Install Lean (via elan)
 curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh
-
-# Fetch Mathlib cache (recommended)
-lake exe cache get
-
-# Build
+lake exe cache get   # fetch pre-built Mathlib
 lake build HTSIEFormalization
-
-# Check sorry count
-grep -rn "sorry" HTSIE/ Theorems/ Counterexamples/ | grep -v "^Binary"
+grep -rn "^[[:space:]]*sorry" HTSIE/ Measures/ Theorems/ Counterexamples/ Applications/
 ```
 
-CI runs automatically on every push via `.github/workflows/lean.yml`.
-
-## 10. Evidence Classification
+## 11. Evidence Classification
 
 | Label | Meaning |
 |---|---|
@@ -188,40 +205,53 @@ CI runs automatically on every push via `.github/workflows/lean.yml`.
 | `[PHYSICAL_OPEN]` | Mathematical statement may be formalized, but physical interpretation unestablished |
 | `[NUMERICAL]` | Computational observation (not formal proof) |
 
-## 11. HTSIE Proposition Status Table
+## 12. Complete HTSIE Proposition Status Table
 
 | HTSIE Proposition | Mathematical Status | Lean Status | Computational Status |
 |---|---|---|---|
-| `PositiveCapacity` definition | Defined | [FORMAL_VERIFIED] | — |
-| `CapacitySaturation` definition | Defined | [FORMAL_VERIFIED] | — |
-| `InstabilityAt` definition | Defined | [FORMAL_VERIFIED] | — |
-| `NegativeProductDerivAbove` definition | Defined | [FORMAL_VERIFIED] | — |
-| Derivative identity F'=C+EC' | Theorem | [FORMAL_VERIFIED] | — |
+| `HTSIESystem` definition | Defined | [FORMAL_VERIFIED] | — |
+| `ConstraintMonotone` definition | Defined | [FORMAL_VERIFIED] | — |
+| `SIIMeasure` definition | Defined | [FORMAL_VERIFIED] | — |
+| `DFFIMeasure` definition | Defined | [FORMAL_VERIFIED] | — |
+| `EDIMeasure` definition | Defined | [FORMAL_VERIFIED] | — |
+| HTSIE chain end-to-end | Theorem | [FORMAL_VERIFIED] | — |
+| Accessibility reduction | Theorem | [FORMAL_VERIFIED] | — |
+| Full constraint reduction | Theorem | [FORMAL_VERIFIED] | — |
+| SII monotonicity (log-card) | Theorem | [FORMAL_VERIFIED] | — |
+| DFFI bounds [0,1] | Theorem | [FORMAL_VERIFIED] | — |
+| EDI monotonicity (log-card) | Theorem | [FORMAL_VERIFIED] | — |
+| ConstraintMonotone can fail | Theorem | [FORMAL_VERIFIED] | — |
 | Saturation ⟹ Instability | **REFUTED** | [FORMAL_COUNTEREXAMPLE] | — |
 | NegProdDeriv ⟹ Instability | Theorem | [FORMAL_VERIFIED] | — |
-| NegProdDeriv ⟹ StrictSat | Theorem | [FORMAL_VERIFIED] | — |
-| Accessibility reduction | Open | [FORMAL_OPEN] | [NUMERICAL] |
-| Effective-dimension transition | Open | [FORMAL_OPEN] | [NUMERICAL] |
-| Spectral-dimension flow | Open | [FORMAL_OPEN] | [NUMERICAL] |
+| Spectral dim is EDI measure | Open | [FORMAL_OPEN] | [NUMERICAL] |
+| DFFI ↑ ⟹ DOF ↓ (general) | Open | [FORMAL_OPEN] | [NUMERICAL] |
+| Chandrasekhar = HTSIE instability | Open | [FORMAL_OPEN] | [NUMERICAL] |
+| Accessibility reduction (effective dim) | Open | [FORMAL_OPEN] | [NUMERICAL] |
 | Universal HTSIE principle | Conjecture | [CONJECTURE] | [OPEN] |
+| LLM scaling follows HTSIE | Conjecture | [CONJECTURE] | [NUMERICAL] |
 
-## 12. Mathematical Audit Summary
+## 13. Research Methodology (Updated)
 
-**Original theorem** `info_saturation_instability`:
-```
-CapacitySaturation ∧ StrictSaturation ⟹ InstabilityAt
-```
-**Status**: **INVALID** — refuted by C(E) = 1.
+The HTSIE research workflow now includes a formal verification step:
 
-**Corrected theorem** `htsie_instability_corrected`:
 ```
-NegativeProductDerivAbove C E₀ ⟹ InstabilityAt C E₀
+Research Question
+      ↓
+Hypothesis
+      ↓
+Mathematical Formulation
+      ↓
+Formal Specification (Lean)
+      ↓
+Lean Verification / Falsification
+      ↓
+Computational Experiment
+      ↓
+Numerical Audit
+      ↓
+Reproducibility
+      ↓
+Physical Interpretation
 ```
-**Status**: **VALID** — [FORMAL_VERIFIED].
 
-**Minimal additional condition required**:
-```
-∀ E > E₀, C(E) + E·C'(E) < 0
-```
-This is strictly stronger than CapacitySaturation and requires
-C to be strictly decreasing fast enough to overcome C(E)/E.
+This is consistent with the falsification-oriented methodology already stated in the HTSIE README.
