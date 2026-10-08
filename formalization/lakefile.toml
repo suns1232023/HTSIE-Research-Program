@@ -1,19 +1,24 @@
-name = "HTSIEChandrasekhar"
-version = "0.1.0"
-defaultTargets = ["HTSIEChandrasekhar"]
+name = "HTSIEFormalization"
+version = "0.3.0"
+defaultTargets = ["HTSIEFormalization"]
 
 [[require]]
 name = "mathlib"
-scope = "leanprover-community"
+from = "git"
+url = "https://github.com/leanprover-community/mathlib4"
 rev = "v4.14.0"
 
 [[lean_lib]]
-name = "HTSIEChandrasekhar"
-srcDir = "."
-roots = [
-  "Chandrasekhar.Basic",
-  "Chandrasekhar.EquationOfState",
-  "Chandrasekhar.Polytrope",
-  "Chandrasekhar.MassLimit",
-  "Chandrasekhar.Main"
+name = "HTSIEFormalization"
+globs = [
+  "HTSIE.Foundations.StateSpace",
+  "HTSIE.Foundations.Constraints",
+  "HTSIE.Foundations.AccessibleStates",
+  "HTSIE.Information.DFFI",
+  "HTSIE.Information.SII",
+  "Applications.Chandrasekhar.Basic",
+  "Applications.Chandrasekhar.EquationOfState",
+  "Applications.Chandrasekhar.Polytrope",
+  "Applications.Chandrasekhar.MassLimit",
+  "Applications.Chandrasekhar.Main"
 ]
