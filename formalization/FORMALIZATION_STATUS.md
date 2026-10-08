@@ -1,8 +1,4 @@
----
 
-## 文件16：`formalization/FORMALIZATION_STATUS.md`（完整最终版）
-
-```markdown
 # FORMALIZATION_STATUS.md
 
 ## Build Environment
