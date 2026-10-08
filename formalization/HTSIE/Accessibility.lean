@@ -16,9 +16,9 @@
 
 import Mathlib.Order.Basic
 import Mathlib.Data.Set.Basic
-import Mathlib.Data.Set.Finite
-import HTSIEFormalization.HTSIE.Basic
-import HTSIEFormalization.HTSIE.Constraint
+import Mathlib.Data.Set.Finite.Basic
+import HTSIE.Basic
+import HTSIE.Constraint
 
 open Set
 
@@ -198,4 +198,3 @@ theorem full_htsie_chain
   apply hinfo
   exact hmono c₁ c₂ hc
 
-end
