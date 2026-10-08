@@ -11,9 +11,8 @@
 -/
 
 import Mathlib.Order.Basic
-import Mathlib.Order.Defs
 import Mathlib.Data.Set.Basic
-import HTSIEFormalization.HTSIE.Basic
+import HTSIE.Basic
 
 open Set
 
@@ -162,4 +161,3 @@ how does the accessible state space change?
 -/
 -- theorem constraint_lattice_compatibility : ... -- [FORMAL_OPEN]
 
-end
