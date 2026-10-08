@@ -14,8 +14,14 @@ on:
       - 'formalization/**'
 
 jobs:
-   
-   - name: Debug — show actual file structure
+  debug:
+    name: Debug — show actual file structure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Inspect directories
         working-directory: formalization
         run: |
           echo "=== Current directory ==="
@@ -30,7 +36,6 @@ jobs:
   build:
     name: Lean 4 Build and Audit
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
