@@ -21,8 +21,9 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Order.Basic
 import Mathlib.Data.Set.Basic
-import Mathlib.Data.Set.Finite
-import HTSIEFormalization.HTSIE.Basic
+import Mathlib.Data.Set.Finite.Basic
+import Mathlib.Tactic.NormCast
+import HTSIE.Basic
 
 open Set
 
@@ -199,4 +200,3 @@ theorem dffi_dof_chain
     dof (sys.accessibility c₂) ≤ dof (sys.accessibility c₁) :=
   hcompat c₁ c₂ hc
 
-end
