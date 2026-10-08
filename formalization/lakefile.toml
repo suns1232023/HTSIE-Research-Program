@@ -22,10 +22,10 @@ globs = [
   "Theorems.ConstraintReduction",
   "Theorems.HTSIEInequality",
   "Counterexamples.SaturationNotInstability",
-  "Applications.Chandrasekhar.Basic",
-  "Applications.Chandrasekhar.EquationOfState",
-  "Applications.Chandrasekhar.Polytrope",
-  "Applications.Chandrasekhar.MassLimit",
-  "Applications.Chandrasekhar.Main",
+  "Chandrasekhar.Basic",
+  "Chandrasekhar.EquationOfState",
+  "Chandrasekhar.Polytrope",
+  "Chandrasekhar.MassLimit",
+  "Chandrasekhar.Main",
   "Applications.SAE.DFFI_SAE"
 ]
