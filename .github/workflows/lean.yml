@@ -15,7 +15,7 @@ on:
 
 jobs:
   build:
-    name: Lean 4 Build
+    name: Lean 4 Build and Audit
     runs-on: ubuntu-latest
 
     steps:
@@ -51,13 +51,29 @@ jobs:
 
       - name: Build
         working-directory: formalization
-        run: lake build HTSIEChandrasekhar
+        run: lake build HTSIEFormalization
 
-      - name: Sorry audit (FORMAL_VERIFIED files must have 0 sorry)
+      - name: Sorry audit — FORMAL_VERIFIED files (must be 0)
         working-directory: formalization
         run: |
           SORRY=0
-          for f in Chandrasekhar/Basic.lean Chandrasekhar/EquationOfState.lean Chandrasekhar/Main.lean; do
+          VERIFIED_FILES=(
+            "HTSIE/Foundations/StateSpace.lean"
+            "HTSIE/Foundations/Constraints.lean"
+            "HTSIE/Foundations/AccessibleStates.lean"
+            "HTSIE/Information/DFFI.lean"
+            "HTSIE/Information/SII.lean"
+            "HTSIE/Dimension/EDI.lean"
+            "HTSIE/Inequalities/HTSIEInequality.lean"
+            "HTSIE/SpectralFlow/SpectralDimension.lean"
+            "Theorems/Instability.lean"
+            "Theorems/ConstraintReduction.lean"
+            "Theorems/HTSIEInequality.lean"
+            "Counterexamples/SaturationNotInstability.lean"
+            "Applications/SAE/DFFI_SAE.lean"
+            "Applications/Chandrasekhar/Main.lean"
+          )
+          for f in "${VERIFIED_FILES[@]}"; do
             if [ -f "$f" ]; then
               N=$(grep -c "^[[:space:]]*sorry" "$f" || true)
               echo "$f: $N sorry"
@@ -69,22 +85,37 @@ jobs:
             echo "FAIL: sorry found in FORMAL_VERIFIED files"
             exit 1
           fi
-          echo "PASS"
+          echo "PASS: 0 sorry in FORMAL_VERIFIED files"
 
-      - name: Sorry audit (FORMAL_OPEN files — informational)
+      - name: Sorry audit — FORMAL_OPEN files (informational)
         working-directory: formalization
         run: |
-          for f in Chandrasekhar/Polytrope.lean Chandrasekhar/MassLimit.lean; do
+          OPEN_FILES=(
+            "Applications/Chandrasekhar/Polytrope.lean"
+            "Applications/Chandrasekhar/MassLimit.lean"
+          )
+          for f in "${OPEN_FILES[@]}"; do
             if [ -f "$f" ]; then
               N=$(grep -c "^[[:space:]]*sorry" "$f" || true)
-              echo "$f: $N sorry [FORMAL_OPEN — expected]"
+              echo "$f: $N sorry [FORMAL_OPEN — expected and documented]"
             fi
           done
 
-      - name: Upload build log
+      - name: Generate status report
+        working-directory: formalization
+        run: |
+          echo "=== HTSIE Formalization Status ===" > status_report.txt
+          echo "Date: $(date -u)" >> status_report.txt
+          echo "Lean: ${{ steps.tc.outputs.version }}" >> status_report.txt
+          echo "" >> status_report.txt
+          echo "Files built:" >> status_report.txt
+          find . -name "*.lean" | sort >> status_report.txt
+          cat status_report.txt
+
+      - name: Upload status report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lean-build-log
-          path: formalization/build.log
+          name: formalization-status
+          path: formalization/status_report.txt
           if-no-files-found: ignore
