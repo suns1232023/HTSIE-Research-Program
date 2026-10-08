@@ -10,15 +10,19 @@ rev = "v4.14.0"
 [[lean_lib]]
 name = "HTSIE"
 srcDir = "."
+globs = ["HTSIE.+"]
 
 [[lean_lib]]
 name = "Theorems"
 srcDir = "."
+globs = ["Theorems.+"]
 
 [[lean_lib]]
 name = "Counterexamples"
 srcDir = "."
+globs = ["Counterexamples.+"]
 
 [[lean_lib]]
 name = "Applications"
 srcDir = "."
+globs = ["Applications.+"]
