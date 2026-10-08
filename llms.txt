@@ -1,0 +1,25 @@
+# HTSIE-Research-Program — AI-readable index
+
+## Repository
+https://github.com/suns1232023/HTSIE-Research-Program
+
+## Current Structure
+- README.md: Main project overview
+- formalization/: Lean 4 formal verification layer
+- formalization/README.md: Lean formalization documentation
+- formalization/lakefile.toml: Lean project configuration
+- formalization/lean-toolchain: Lean version pin
+- htsie_1(理论基础).md: Theoretical foundations
+- htsie_2(数学骨架).md: Mathematical framework
+- htsie_3(大模型可解释性).md: LLM interpretability
+- htsie_4(实验与验证).md: Experiments and validation
+- htsie_5(跨学科应用).md: Cross-disciplinary applications
+- experiments/: Computational experiments
+- scripts/: Analysis scripts
+- data/: Research datasets
+
+## Lean Formalization Status
+- Lean version: v4.14.0
+- Main theorem: htsie_chain_end_to_end [FORMAL_VERIFIED]
+- Chandrasekhar: [FORMAL_VERIFIED]
+- CI: .github/workflows/lean.yml
