@@ -12,7 +12,7 @@
 
 import Mathlib.Order.Basic
 import Mathlib.Data.Finset.Basic
-import HTSIE.HTSIE.Foundations.StateSpace
+import HTSIE.Foundations.StateSpace
 
 /-!
 ## Structural Constraints
@@ -39,7 +39,7 @@ structure FinConstraintSystem (X : FinStateSpace) where
   See constraint_monotone_can_fail below.
   [FORMALIZED]
 -/
-def ConstraintMonotone (sys : FinConstraintSystem X) : Prop :=
+def ConstraintMonotone {X : FinStateSpace} (sys : FinConstraintSystem X) : Prop :=
   ∀ c₁ c₂ : ℕ, c₁ ≤ c₂ → sys.accessibility c₂ ⊆ sys.accessibility c₁
 
 /--
@@ -57,26 +57,30 @@ def ConstraintMonotone (sys : FinConstraintSystem X) : Prop :=
 theorem constraint_monotone_can_fail :
     ∃ (X : FinStateSpace) (sys : FinConstraintSystem X),
     ¬ ConstraintMonotone sys := by
-  -- State space: {1, 2, 3, 4, 5}
   let X : FinStateSpace := {
     states := {1, 2, 3, 4, 5}
     nonempty := ⟨1, by simp⟩
   }
-  -- Accessibility: n ↦ {n+1} (if in range)
   let sys : FinConstraintSystem X := {
     accessibility := fun n => if n + 1 ∈ ({1,2,3,4,5} : Finset ℕ) then {n+1} else ∅
     accessible_subset := by
       intro c
-      simp only
       split_ifs with h
       · exact Finset.singleton_subset_iff.mpr h
       · exact Finset.empty_subset _
   }
-  exact ⟨X, sys, by
-    intro h
-    -- h says: 1 ≤ 2 → {3} ⊆ {2}, which is false
-    have := h 1 2 (by norm_num)
-    simp at this⟩
+  refine ⟨X, sys, ?_⟩
+  intro h
+  have h12 : (1 : ℕ) ≤ 2 := by norm_num
+  have hsub := h 1 2 h12
+  dsimp [sys] at hsub
+  have h1 : (1 + 1 : ℕ) ∈ ({1, 2, 3, 4, 5} : Finset ℕ) := by decide
+  have h2 : (2 + 1 : ℕ) ∈ ({1, 2, 3, 4, 5} : Finset ℕ) := by decide
+  rw [if_pos h1, if_pos h2] at hsub
+  have h3_in : (3 : ℕ) ∈ ({3} : Finset ℕ) := Finset.mem_singleton_self 3
+  have h3_in_2 : (3 : ℕ) ∈ ({2} : Finset ℕ) := hsub h3_in
+  revert h3_in_2
+  decide
 
 /--
   When ConstraintMonotone holds, stronger constraints
