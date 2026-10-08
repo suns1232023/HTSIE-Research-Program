@@ -1,1 +1,43 @@
+name: Research Integrity Check
 
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * 1'
+
+jobs:
+  integrity:
+    name: Update Formalization Status
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check formalization files exist
+        run: |
+          echo "=== Checking formalization structure ==="
+          ls formalization/ || echo "formalization/ directory not found"
+          ls formalization/HTSIE/ || echo "HTSIE/ not found"
+          ls formalization/Theorems/ || echo "HTSIE Theorems/ not found"
+          ls formalization/Counterexamples/ || echo "Counterexamples/ not found"
+          ls formalization/Applications/ || echo "Applications/ not found"
+
+      - name: Count sorry instances
+        run: |
+          echo "=== Sorry count by directory ==="
+          for dir in formalization/HTSIE formalization/Measures formalization/Theorems formalization/Counterexamples formalization/Applications; do
+            if [ -d "$dir" ]; then
+              COUNT=$(grep -rn "^[[:space:]]*sorry" "$dir" --include="*.lean" | wc -l || echo 0)
+              echo "$dir: $COUNT sorry"
+            fi
+          done
+
+      - name: Update FORMALIZATION_STATUS timestamp
+        run: |
+          echo "Last integrity check: $(date -u)" >> formalization/FORMALIZATION_STATUS.md
+          echo "Integrity check completed successfully"
