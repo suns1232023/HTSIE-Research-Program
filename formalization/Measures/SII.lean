@@ -18,7 +18,11 @@ import Mathlib.MeasureTheory.Measure.MeasureSpace
 import Mathlib.MeasureTheory.Measure.Restrict
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Topology.MetricSpace.Basic
-import HTSIEFormalization.HTSIE.Basic
+import Mathlib.Tactic.Push_neg
+import Mathlib.Tactic.NormCast
+import Mathlib.Data.Finset.Basic
+import Mathlib.Data.Finset.Card
+import HTSIE.Basic
 
 open MeasureTheory Set Real
 
@@ -182,4 +186,3 @@ theorem sii_decreases_with_constraint
 -/
 -- theorem sii_subadditive : ... -- [FORMAL_OPEN]
 
-end
