@@ -1,0 +1,189 @@
+repository:
+  name: HTSIE-Research-Program
+  type: independent_research_program
+  branch: main
+  status: active
+  language:
+    primary:
+      - Lean 4
+      - Python
+      - Markdown
+    secondary:
+      - HTML
+      - YAML
+
+research:
+  name: Structural Information Evolution
+  acronym: HTSIE
+  epistemic_status: research_programme
+  universal_law_status: unestablished
+
+  central_working_hypothesis:
+    statement: >
+      Structural constraints may reduce effective degrees of freedom,
+      reduce the accessible state space, and alter information
+      representation or effective dimensionality.
+    status: CONJECTURE
+
+  methodology:
+    - mathematical_formulation
+    - formal_specification
+    - lean_verification
+    - formal_falsification
+    - computational_experiment
+    - numerical_audit
+    - reproducibility
+    - physical_interpretation
+
+research_modules:
+
+  theory:
+    path: htsie_1(理论基础).md
+    role: theoretical_foundations
+
+  mathematics:
+    path: htsie_2(数学骨架).md
+    role: mathematical_framework
+
+  llm:
+    path: htsie_3(大模型可解释性).md
+    role: llm_interpretability
+
+  experiments:
+    path: htsie_4(实验与验证).md
+    role: experiments_and_validation
+
+  applications:
+    path: htsie_5(跨学科应用).md
+    role: cross_disciplinary_applications
+
+formalization:
+  root: formalization/
+
+  framework:
+    path: formalization/HTSIE/
+    role: core_mathematical_framework
+
+  measures:
+    path: formalization/Measures/
+    role: htsie_measures
+
+  theorems:
+    path: formalization/Theorems/
+    role: core_theorems
+
+  counterexamples:
+    path: formalization/Counterexamples/
+    role: formal_refutations
+
+  applications:
+    path: formalization/Applications/
+    role: physical_instantiations
+
+  registry:
+    path: formalization/formalization_registry.yaml
+
+  status:
+    path: formalization/FORMALIZATION_STATUS.md
+
+  audit:
+    path: formalization/AXIOM_AUDIT.md
+
+evidence_labels:
+  FORMALIZED:
+    meaning: mathematical_object_encoded_in_lean
+
+  FORMAL_VERIFIED:
+    meaning: proposition_machine_checked_under_encoded_assumptions
+
+  FORMAL_COUNTEREXAMPLE:
+    meaning: formal_counterexample_verified
+
+  FORMAL_OPEN:
+    meaning: formal_statement_exists_but_proof_incomplete
+
+  NUMERICAL:
+    meaning: computational_observation_not_formal_proof
+
+  EMPIRICAL:
+    meaning: empirical_or_experimental_evidence
+
+  PHYSICAL_OPEN:
+    meaning: physical_interpretation_not_established
+
+  CONJECTURE:
+    meaning: unestablished_research_hypothesis
+
+current_results:
+
+  - id: htsie_chain
+    name: HTSIE chain end-to-end
+    path: formalization/HTSIE/Basic.lean
+    status: FORMAL_VERIFIED
+
+  - id: accessibility_reduction
+    name: Accessibility reduction
+    path: formalization/HTSIE/Accessibility.lean
+    status: FORMAL_VERIFIED
+
+  - id: constraint_reduction
+    name: Full constraint reduction
+    path: formalization/Theorems/ConstraintReduction.lean
+    status: FORMAL_VERIFIED
+
+  - id: sii_monotonicity
+    name: SII monotonicity
+    path: formalization/Measures/SII.lean
+    status: FORMAL_VERIFIED
+
+  - id: dffi_bounds
+    name: DFFI bounds
+    path: formalization/Measures/DFFI.lean
+    status: FORMAL_VERIFIED
+
+  - id: edi_monotonicity
+    name: EDI monotonicity
+    path: formalization/Measures/EDI.lean
+    status: FORMAL_VERIFIED
+
+  - id: saturation_not_instability
+    name: Capacity saturation does not imply instability
+    path: formalization/Counterexamples/SaturationNotInstability.lean
+    status: FORMAL_COUNTEREXAMPLE
+
+open_problems:
+
+  - id: spectral_dimension_edi
+    status: FORMAL_OPEN
+
+  - id: general_dof_reduction
+    status: FORMAL_OPEN
+
+  - id: quantitative_htsie_inequality
+    status: FORMAL_OPEN
+
+  - id: chandrasekhar_htsie_equivalence
+    status: PHYSICAL_OPEN
+
+  - id: cross_system_universality
+    status: CONJECTURE
+
+ai_navigation:
+
+  first_read:
+    - AGENTS.md
+    - AI_README.md
+    - RESEARCH_MAP.yaml
+
+  mathematical_work:
+    - formalization/FORMALIZATION_STATUS.md
+    - formalization/AXIOM_AUDIT.md
+
+  coding_work:
+    - .github/copilot-instructions.md
+
+  never_assume:
+    - numerical_result_is_theorem
+    - conjecture_is_fact
+    - formalized_means_proven
+    - physical_interpretation_is_established
