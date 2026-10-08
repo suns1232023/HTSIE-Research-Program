@@ -1,4 +1,8 @@
-/-  Theorems/Instability.lean  [FORMAL_VERIFIED]-/
+/-
+  Theorems/Instability.lean
+  [FORMAL_VERIFIED]
+-/
+
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.MeanValue
@@ -18,13 +22,14 @@ def NegativeProductDerivAbove (C : ℝ → ℝ) (E₀ : ℝ) : Prop :=
 
 noncomputable def infoEnergyProduct (C : ℝ → ℝ) : ℝ → ℝ := fun E => E * C E
 
-/-- F'(E) = C(E) + E·C'(E). [FORMAL_VERIFIED] -/
+/-- F'(E) = C(E) + E times C'(E). [FORMAL_VERIFIED] -/
 lemma deriv_infoEnergyProduct (C : ℝ → ℝ) (E : ℝ)
     (hC : DifferentiableAt ℝ C E) :
     deriv (infoEnergyProduct C) E = C E + E * deriv C E := by
   unfold infoEnergyProduct
+  have hE : DifferentiableAt ℝ (fun x : ℝ => x) E := differentiableAt_id
   have hd : HasDerivAt (fun E => E * C E) (1 * C E + E * deriv C E) E :=
-    (hasDerivAt_id' E).mul hC.hasDerivAt
+    hE.hasDerivAt.mul hC.hasDerivAt
   rw [hd.deriv]
   ring
 
@@ -56,10 +61,10 @@ theorem strictly_decreasing_of_neg_deriv
   linarith
 
 theorem htsie_instability_corrected
-    (C : ℝ → ℝ) (E₀ : ℝ) (_hE₀ : E₀ > 0)
+    (C : ℝ → ℝ) (E₀ : ℝ) (hE₀ : E₀ > 0)
     (hC_diff : ∀ E : ℝ, E > E₀ → DifferentiableAt ℝ C E)
     (hC_cont : ContinuousOn C (Set.Ici E₀))
-    (_hC_pos : PositiveCapacity C)
+    (hC_pos  : PositiveCapacity C)
     (hneg    : NegativeProductDerivAbove C E₀) :
     InstabilityAt C E₀ := by
   let F := infoEnergyProduct C
