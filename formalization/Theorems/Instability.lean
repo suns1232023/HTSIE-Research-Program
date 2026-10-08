@@ -1,38 +1,33 @@
-/-
-  Theorems/Instability.lean
-  [FORMAL_VERIFIED]
--/
- 
+/-  Theorems/Instability.lean  [FORMAL_VERIFIED]-/
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith
- 
+
 open Real Set
- 
+
 def PositiveCapacity (C : ℝ → ℝ) : Prop :=
   ∀ E : ℝ, E > 0 → C E > 0
- 
+
 def InstabilityAt (C : ℝ → ℝ) (E₀ : ℝ) : Prop :=
   ∃ E : ℝ, E > E₀ ∧ E * C E < E₀ * C E₀
- 
+
 def NegativeProductDerivAbove (C : ℝ → ℝ) (E₀ : ℝ) : Prop :=
   ∀ E : ℝ, E > E₀ → C E + E * deriv C E < 0
- 
+
 noncomputable def infoEnergyProduct (C : ℝ → ℝ) : ℝ → ℝ := fun E => E * C E
- 
-/-- F'(E) = C(E) + E times C'(E). [FORMAL_VERIFIED] -/
+
+/-- F'(E) = C(E) + E·C'(E). [FORMAL_VERIFIED] -/
 lemma deriv_infoEnergyProduct (C : ℝ → ℝ) (E : ℝ)
     (hC : DifferentiableAt ℝ C E) :
     deriv (infoEnergyProduct C) E = C E + E * deriv C E := by
   unfold infoEnergyProduct
-  have hE : DifferentiableAt ℝ (fun x : ℝ => x) E := differentiableAt_id
   have hd : HasDerivAt (fun E => E * C E) (1 * C E + E * deriv C E) E :=
-    hE.hasDerivAt.mul hC.hasDerivAt
+    (hasDerivAt_id' E).mul hC.hasDerivAt
   rw [hd.deriv]
   ring
- 
+
 theorem strictly_decreasing_of_neg_deriv
     (F : ℝ → ℝ) (E₀ : ℝ)
     (hF_cont : ContinuousOn F (Ici E₀))
@@ -59,12 +54,12 @@ theorem strictly_decreasing_of_neg_deriv
     have hmul := mul_neg_of_neg_of_pos hderiv_neg hba
     rwa [div_mul_cancel₀ _ (ne_of_gt hba)] at hmul
   linarith
- 
+
 theorem htsie_instability_corrected
-    (C : ℝ → ℝ) (E₀ : ℝ) (hE₀ : E₀ > 0)
+    (C : ℝ → ℝ) (E₀ : ℝ) (_hE₀ : E₀ > 0)
     (hC_diff : ∀ E : ℝ, E > E₀ → DifferentiableAt ℝ C E)
     (hC_cont : ContinuousOn C (Set.Ici E₀))
-    (hC_pos  : PositiveCapacity C)
+    (_hC_pos : PositiveCapacity C)
     (hneg    : NegativeProductDerivAbove C E₀) :
     InstabilityAt C E₀ := by
   let F := infoEnergyProduct C
@@ -78,4 +73,3 @@ theorem htsie_instability_corrected
   have hanti := strictly_decreasing_of_neg_deriv F E₀ hF_cont hF_diff hF_neg
   exact ⟨E₀ + 1, by linarith,
     hanti (le_refl E₀) (by simp [Set.mem_Ici]) (by linarith)⟩
- 
