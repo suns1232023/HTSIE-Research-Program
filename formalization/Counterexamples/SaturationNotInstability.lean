@@ -1,8 +1,4 @@
-/-
-  Counterexamples/SaturationNotInstability.lean
-  [FORMAL_COUNTEREXAMPLE]
--/
-
+/-  Counterexamples/SaturationNotInstability.lean  [FORMAL_COUNTEREXAMPLE]-/
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Data.Real.Basic
 
@@ -24,7 +20,7 @@ noncomputable def constCapacity : ℝ → ℝ := fun _ => 1
 
 lemma constCapacity_deriv (E : ℝ) : deriv constCapacity E = 0 := by
   have : constCapacity = fun _ => (1 : ℝ) := rfl
-  simp [this, deriv_const]
+  simp only [this, deriv_const]
 
 lemma constCapacity_saturation : CapacitySaturation constCapacity := by
   intro E _
@@ -33,13 +29,10 @@ lemma constCapacity_saturation : CapacitySaturation constCapacity := by
 
 lemma constCapacity_strict_saturation (E : ℝ) (hE : E > 0) :
     StrictSaturationAt constCapacity E := by
-  constructor
-  · exact hE
-  · rw [constCapacity_deriv]
-    simp
-    positivity
+  refine ⟨hE, ?_⟩
+  rw [constCapacity_deriv]
+  norm_num
 
-/-- [FORMAL_COUNTEREXAMPLE] -/
 theorem saturation_not_instability :
     CapacitySaturation constCapacity ∧
     (∀ E₀ : ℝ, E₀ > 0 →
