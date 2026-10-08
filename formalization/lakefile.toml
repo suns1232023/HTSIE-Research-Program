@@ -1,6 +1,6 @@
 name = "HTSIEFormalization"
 version = "0.3.0"
-defaultTargets = ["HTSIEFormalization"]
+defaultTargets = ["HTSIE", "Theorems", "Counterexamples", "Applications"]
 
 [[require]]
 name = "mathlib"
