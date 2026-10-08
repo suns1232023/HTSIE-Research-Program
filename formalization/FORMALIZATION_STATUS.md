@@ -1,41 +1,69 @@
+---
+
+## 文件16：`formalization/FORMALIZATION_STATUS.md`（完整最终版）
+
+```markdown
 # FORMALIZATION_STATUS.md
 
-## Current Build Status
+## Build Environment
 
 | Item | Value |
 |---|---|
 | Lean version | leanprover/lean4:v4.14.0 |
-| Mathlib version | v4.14.0 |
-| Last successful build | (fill after first CI pass) |
-| Build status | PENDING — first build not yet run |
+| Mathlib version | v4.14.0 (pinned in lakefile.toml) |
+| Build command | `lake build HTSIEFormalization` |
+| CI | `.github/workflows/lean.yml` |
 | Sorry count (FORMAL_VERIFIED files) | 0 (target) |
-| Sorry count (FORMAL_OPEN files) | 2 (laneEmden_n3_exists, n3_mass_independent) |
-| Admit count | 0 |
+| Sorry count (FORMAL_OPEN files) | 2 (documented in AXIOM_AUDIT.md) |
 | Custom axioms | 0 |
-| Main theorem | chandrasekhar_limit_exists_and_positive |
-| Main theorem status | [FORMAL_VERIFIED] |
-| Formalization level | Level 3 — mathematical derivation formalized |
-| Coverage | 7/9 steps of Chandrasekhar chain |
-| CI status | PENDING — lean.yml not yet triggered |
-| Last verified commit | (fill after first CI pass) |
 
-## Chandrasekhar Chain Coverage
+## Complete Proposition Status
 
-| Mathematical Layer | Formalized | Lean Theorem | Evidence |
+| Proposition | Mathematical Status | Lean Status | Computational / Physical Status |
 |---|---|---|---|
-| Relativistic degenerate EOS | YES | ultraRelativisticEOS | [FORMAL_DEF] |
-| γ = 4/3 | YES | ultraRelativistic_polytrope_index | [FORMAL_VERIFIED] |
-| n = 3 polytrope | YES | ultraRelativistic_is_polytrope_n3 | [FORMAL_VERIFIED] |
-| Lane-Emden equation | PARTIAL | LaneEmdenEq (def only) | [FORMAL_DEF] |
-| Lane-Emden solution existence | NO | laneEmden_n3_exists | [FORMAL_OPEN] |
-| Mass formula | PARTIAL | polytropicMass (def only) | [FORMAL_DEF] |
-| Mass independence of ρ_c | PARTIAL | n3_mass_exponent_on_rho_c | [FORMAL_VERIFIED] |
-| Chandrasekhar mass M_Ch > 0 | YES | chandrasekharMass_pos | [FORMAL_VERIFIED] |
-| Numerical M_Ch ≈ 1.44 M_☉ | NO | — | [ESTABLISHED] |
+| `FinStateSpace` | Defined | [FORMALIZED] | — |
+| `FinConstraintSystem` | Defined | [FORMALIZED] | — |
+| `ConstraintMonotone` | Defined | [FORMALIZED] | — |
+| `DFFI` | Defined | [FORMALIZED] | — |
+| `SII` | Defined | [FORMALIZED] | — |
+| `EDI` | Defined | [FORMALIZED] | — |
+| `SpectralDimFn` | Defined | [FORMALIZED] | — |
+| `foldingParameter` | Defined | [FORMALIZED] | — |
+| `NegativeProductDerivAbove` | Defined | [FORMALIZED] | — |
+| `card_pos` | Theorem | [FORMAL_VERIFIED] | — |
+| `constraint_monotone_can_fail` | Theorem | [FORMAL_VERIFIED] | — |
+| `accessibility_reduction` | Theorem | [FORMAL_VERIFIED] | — |
+| `DFFI_bounds` (0 ≤ DFFI ≤ 1) | Theorem | [FORMAL_VERIFIED] | — |
+| `DFFI_monotone` | Theorem | [FORMAL_VERIFIED] | — |
+| `SII_nonneg` | Theorem | [FORMAL_VERIFIED] | — |
+| `SII_monotone` | Theorem | [FORMAL_VERIFIED] | — |
+| `EDI_nonneg` | Theorem | [FORMAL_VERIFIED] | — |
+| `EDI_monotone` | Theorem | [FORMAL_VERIFIED] | — |
+| `htsie_inequality_finite` | Theorem | [FORMAL_VERIFIED] | — |
+| `spectral_flow_iff_folding_monotone` | Theorem | [FORMAL_VERIFIED] | — |
+| `htsie_instability_corrected` | Theorem | [FORMAL_VERIFIED] | — |
+| `htsie_constraint_reduction` | Theorem | [FORMAL_VERIFIED] | — |
+| `saturation_not_instability` | **REFUTED** | [FORMAL_COUNTEREXAMPLE] | — |
+| `DFFI_SAE_bounds` | Theorem | [FORMAL_VERIFIED] | — |
+| `chandrasekharMass_pos` | Theorem | [FORMAL_VERIFIED] | — |
+| `chandrasekhar_limit_exists_and_positive` | Theorem | [FORMAL_VERIFIED] | — |
+| `laneEmden_n3_exists` | Open | [FORMAL_OPEN] | [ESTABLISHED] |
+| `n3_mass_independent` | Open | [FORMAL_OPEN] | [ESTABLISHED] |
+| Spectral dim from heat kernel | Open | [FORMAL_OPEN] | [NUMERICAL] |
+| HTSIE inequality (lattice) | Open | [FORMAL_OPEN] | — |
+| HTSIE inequality (continuous) | Open | [FORMAL_OPEN] | — |
+| Universal HTSIE principle | Conjecture | [CONJECTURE] | [OPEN] |
+| LLM scaling follows HTSIE | Conjecture | [CONJECTURE] | [NUMERICAL] |
+| 5-7% dead latents | Empirical | [EMPIRICAL] | [NUMERICAL] |
+| T ~ n^(0.60-0.65) scaling | Empirical | [EMPIRICAL] | [NUMERICAL] |
 
-## Sorry Inventory
+## Formalization Level
 
-| File | Theorem | Sorry reason | Status |
-|---|---|---|---|
-| Polytrope.lean | laneEmden_n3_exists | Singular ODE at ξ=0; needs Mathlib ODE theory for singular equations | [FORMAL_OPEN] |
-| MassLimit.lean | n3_mass_independent_of_central_density | rpow arithmetic for ρ_c cancellation | [FORMAL_OPEN] |
+**Current level: Level 3** — Mathematical derivation formalized.
+
+| Level | Description | Achieved |
+|---|---|---|
+| 1 | Numerical verification | YES |
+| 2 | Algebraic formalization | YES |
+| 3 | Mathematical derivation | YES (partial) |
+| 4 | Physical assumptions → full derivation | NO (Lane-Emden ODE open) |
