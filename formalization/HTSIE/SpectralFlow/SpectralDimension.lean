@@ -1,8 +1,4 @@
-/-
-  HTSIE/SpectralFlow/SpectralDimension.lean
-  [FORMAL_VERIFIED] for monotonicity equivalence.
--/
-
+/-  HTSIE/SpectralFlow/SpectralDimension.lean  [FORMAL_VERIFIED]-/
 import Mathlib.Order.Monotone.Basic
 import Mathlib.Data.Real.Basic
 
@@ -13,7 +9,6 @@ noncomputable def foldingParameter (D_s : SpectralDimFn) : ℝ → ℝ :=
 
 def SpectralDimFlow (D_s : SpectralDimFn) : Prop := Antitone D_s
 
-/-- D_s antitone ⟺ λ monotone. [FORMAL_VERIFIED] -/
 theorem spectral_flow_iff_folding_monotone (D_s : SpectralDimFn) :
     SpectralDimFlow D_s ↔ Monotone (foldingParameter D_s) := by
   unfold SpectralDimFlow foldingParameter Antitone Monotone
@@ -23,11 +18,10 @@ theorem spectral_flow_iff_folding_monotone (D_s : SpectralDimFn) :
     dsimp only
     linarith
   · intro h t₁ t₂ ht
-    have hfold := h ht
+    have hfold := h t₁ t₂ ht
     dsimp only at hfold
     linarith
 
-/-- If D_s is antitone, then λ is monotone. [FORMAL_VERIFIED] -/
 theorem folding_monotone_of_spectral_flow
     (D_s : SpectralDimFn) (h : SpectralDimFlow D_s) :
     Monotone (foldingParameter D_s) :=
