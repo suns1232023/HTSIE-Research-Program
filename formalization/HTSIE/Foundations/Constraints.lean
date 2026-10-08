@@ -12,7 +12,7 @@
 
 import Mathlib.Order.Basic
 import Mathlib.Data.Finset.Basic
-import HTSIEFormalization.HTSIE.Foundations.StateSpace
+import HTSIE.HTSIE.Foundations.StateSpace
 
 /-!
 ## Structural Constraints
