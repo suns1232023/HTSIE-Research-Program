@@ -14,6 +14,19 @@ on:
       - 'formalization/**'
 
 jobs:
+   
+   - name: Debug — show actual file structure
+        working-directory: formalization
+        run: |
+          echo "=== Current directory ==="
+          pwd
+          echo "=== Top-level contents ==="
+          ls -la
+          echo "=== All .lean files ==="
+          find . -name "*.lean" | sort
+          echo "=== HTSIE directory ==="
+          find . -type d | sort
+
   build:
     name: Lean 4 Build and Audit
     runs-on: ubuntu-latest
