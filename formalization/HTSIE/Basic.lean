@@ -1,10 +1,7 @@
-/-
-  HTSIE/Basic.lean
-  [FORMAL_VERIFIED]
--/
-
+/-  HTSIE/Basic.lean  [FORMAL_VERIFIED]-/
 import Mathlib.Order.Basic
 import Mathlib.Data.Set.Basic
+import Mathlib.Data.Real.ENNReal
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.Deriv.Mul
 
@@ -18,12 +15,10 @@ def ConstraintMonotone {S C : Type*} [Preorder C]
   ∀ c₁ c₂ : C, c₁ ≤ c₂ → sys.accessibility c₂ ⊆ sys.accessibility c₁
 
 def DOFMeasure (S : Type*) := Set S → ENNReal
-
 def DOFMonotone {S : Type*} (dof : DOFMeasure S) : Prop :=
   ∀ A B : Set S, A ⊆ B → dof A ≤ dof B
 
 def InfoMeasure (S : Type*) := Set S → ℝ
-
 def InfoMonotone {S : Type*} (f : InfoMeasure S) : Prop :=
   ∀ A₁ A₂ : Set S, A₂ ⊆ A₁ → f A₂ ≤ f A₁
 
@@ -35,7 +30,6 @@ structure HTSIEChain (S C : Type*) [Preorder C]
   dof_mono        : DOFMonotone dof
   info_mono       : InfoMonotone info
 
-/-- HTSIE chain end-to-end. [FORMAL_VERIFIED] -/
 theorem htsie_chain_end_to_end
     {S C : Type*} [Preorder C]
     {sys : HTSIESystem S C}
@@ -48,7 +42,6 @@ theorem htsie_chain_end_to_end
 
 noncomputable def infoEnergyProduct (C : ℝ → ℝ) : ℝ → ℝ := fun E => E * C E
 
-/-- F'(E) = C(E) + E·C'(E). [FORMAL_VERIFIED] -/
 lemma deriv_infoEnergyProduct (C : ℝ → ℝ) (E : ℝ)
     (hC : DifferentiableAt ℝ C E) :
     deriv (infoEnergyProduct C) E = C E + E * deriv C E := by
