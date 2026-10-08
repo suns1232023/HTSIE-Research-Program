@@ -69,7 +69,7 @@ jobs:
 
       - name: Build
         working-directory: formalization
-        run: lake build HTSIEFormalization
+        run: lake build
 
       - name: Sorry audit — FORMAL_VERIFIED files (must be 0)
         working-directory: formalization
