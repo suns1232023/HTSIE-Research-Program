@@ -19,8 +19,11 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Set.Basic
-import Mathlib.Data.Set.Finite
-import HTSIEFormalization.HTSIE.Basic
+import Mathlib.Data.Set.Finite.Basic
+import Mathlib.Tactic.NormCast
+import Mathlib.Data.Finset.Basic
+import Mathlib.Data.Finset.Card
+import HTSIE.Basic
 
 open Real Set
 
@@ -195,4 +198,3 @@ theorem edi_decreases_with_constraint
 -/
 -- theorem spectral_dim_is_edi_measure : ... -- [FORMAL_OPEN]
 
-end
