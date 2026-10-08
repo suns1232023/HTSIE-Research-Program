@@ -1,25 +1,24 @@
-import Lake
-open Lake DSL
+name = "HTSIEFormalization"
+version = "0.3.0"
+defaultTargets = ["HTSIEFormalization"]
 
-package «HTSIEFormalization» {
-  -- 包配置
-}
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.14.0"
 
-require mathlib from git
-  "https://github.com/leanprover-community/mathlib4.git" @ "v4.14.0"
+[[lean_lib]]
+name = "HTSIE"
+srcDir = "."
 
-lean_lib HTSIE {
-  srcDir := "."
-}
+[[lean_lib]]
+name = "Theorems"
+srcDir = "."
 
-lean_lib Theorems {
-  srcDir := "."
-}
+[[lean_lib]]
+name = "Counterexamples"
+srcDir = "."
 
-lean_lib Counterexamples {
-  srcDir := "."
-}
-
-lean_lib Applications {
-  srcDir := "."
-}
+[[lean_lib]]
+name = "Applications"
+srcDir = "."
