@@ -6,3 +6,5 @@ import HTSIE.Information.SII
 import HTSIE.Dimension.EDI
 import Applications.Chandrasekhar.Basic
 import Applications.Chandrasekhar.EquationOfState
+
+open HTSIE.Foundations
