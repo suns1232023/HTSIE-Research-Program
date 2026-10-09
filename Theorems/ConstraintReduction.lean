@@ -15,6 +15,7 @@
 
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import HTSIE.Dimension.EDI
 
 open Real Set
 
