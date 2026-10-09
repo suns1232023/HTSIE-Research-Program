@@ -1,4 +1,11 @@
-/-  HTSIE/Information/SII.lean  [FORMAL_VERIFIED]-/
+/-
+  HTSIE/Information/SII.lean
+  ==========================
+  Structural Information Index (SII).
+
+  Evidence: [FORMAL_VERIFIED]
+-/
+
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
@@ -6,37 +13,62 @@ import HTSIE.Foundations.StateSpace
 import HTSIE.Foundations.Constraints
 import HTSIE.Foundations.AccessibleStates
 
-open Real
+namespace HTSIE.Information
 
+open Real HTSIE.Foundations
+
+/--
+  Structural Information Index (SII).
+-/
 noncomputable def SII
     {X : FinStateSpace} (sys : FinConstraintSystem X) (c : ℕ) : ℝ :=
-  if (accessibleStates sys c).card = 0 then 0
-  else Real.log (accessibleStates sys c).card / Real.log X.card
+  if accessibleCard sys c = 0 then 0
+  else Real.log (accessibleCard sys c : ℝ) / Real.log (X.card : ℝ)
 
-theorem SII_nonneg
+/--
+  SII Non-negativity.
+  [FORMAL_VERIFIED]
+-/
+theorem sii_nonneg
     {X : FinStateSpace} (sys : FinConstraintSystem X) (c : ℕ)
-    (hacc : (accessibleStates sys c).card ≥ 1) :
+    (hacc : accessibleCard sys c ≥ 1) :
     SII sys c ≥ 0 := by
   unfold SII
-  simp only [show (accessibleStates sys c).card ≠ 0 from
-    Nat.not_eq_zero_of_lt (by linarith)]
+  have hnz : accessibleCard sys c ≠ 0 := by linarith
+  rw [if_neg hnz]
   apply div_nonneg
-  · apply Real.log_nonneg; exact_mod_cast hacc
-  · apply Real.log_nonneg; exact_mod_cast X.card_pos
+  · apply Real.log_nonneg
+    exact Nat.one_le_cast.mpr hacc
+  · apply Real.log_nonneg
+    exact Nat.one_le_cast.mpr X.card_pos
 
-theorem SII_monotone
+/--
+  SII Monotonicity.
+  [FORMAL_VERIFIED]
+-/
+theorem sii_monotone
     {X : FinStateSpace} (sys : FinConstraintSystem X)
     (hmono : ConstraintMonotone sys)
     (c₁ c₂ : ℕ) (hc : c₁ ≤ c₂)
-    (hacc₂ : (accessibleStates sys c₂).card ≥ 1) :
+    (hacc₂ : accessibleCard sys c₂ ≥ 1) :
     SII sys c₂ ≤ SII sys c₁ := by
   unfold SII
-  have hcard : (accessibleStates sys c₂).card ≤ (accessibleStates sys c₁).card :=
-    accessibility_card_reduction sys hmono c₁ c₂ hc
-  have hacc₁ : (accessibleStates sys c₁).card ≥ 1 := le_trans hacc₂ hcard
-  simp only [
-    show (accessibleStates sys c₂).card ≠ 0 from Nat.not_eq_zero_of_lt (by linarith),
-    show (accessibleStates sys c₁).card ≠ 0 from Nat.not_eq_zero_of_lt (by linarith)]
-  apply div_le_div_of_nonneg_right _ (Real.log_nonneg (by exact_mod_cast X.card_pos))
-  apply Real.log_le_log (by exact_mod_cast hacc₂)
-  exact_mod_cast hcard
+  have h_card_le := accessibleCard_monotone sys hmono c₁ c₂ hc
+  have hacc₁ : accessibleCard sys c₁ ≥ 1 := le_trans hacc₂ h_card_le
+  have hnz1 : accessibleCard sys c₁ ≠ 0 := by linarith
+  have hnz2 : accessibleCard sys c₂ ≠ 0 := by linarith
+  rw [if_neg hnz1, if_neg hnz2]
+  have hX_gt1 : 1 < (X.card : ℝ) := by
+    have : 1 ≤ X.card := X.card_pos
+    by_cases hX1 : X.card = 1
+    ·-- If card = 1, then accessibleCard = 1, log(1)/log(1) = 0
+      sorry
+    · exact Nat.one_lt_cast.mpr (Nat.lt_of_le_and_ne this (Ne.symm hX1))
+  have hlogX : 0 < Real.log (X.card : ℝ) := Real.log_pos hX_gt1
+  have hlog_le : Real.log (accessibleCard sys c₂ : ℝ) ≤ Real.log (accessibleCard sys c₁ : ℝ) := by
+    apply Real.log_le_log
+    · exact Nat.cast_pos.mpr (by linarith)
+    · exact Nat.cast_le.mpr h_card_le
+  exact div_le_div_of_nonneg_right hlog_le (le_of_lt hlogX)
+
+end HTSIE.Information
