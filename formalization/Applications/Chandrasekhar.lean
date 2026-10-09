@@ -32,8 +32,6 @@ import Theorems.Instability
 
 open HTSIE.Foundations
 
-open Real Set
-
 /-!
 ## Section 1: The Compact-Star HTSIE Model
 
@@ -118,6 +116,8 @@ theorem chandrasekhar_instability_mathematical
 
   [FORMAL_VERIFIED] — see Counterexamples/SaturationNotInstability.lean
   for the proof that CapacitySaturation alone is insufficient.
+  end
+
 -/
 
 /-!
