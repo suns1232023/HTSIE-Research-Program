@@ -14,7 +14,6 @@
 import Mathlib.Order.Basic
 import Mathlib.Data.Set.Basic
 import HTSIE.Foundations.Constraints
-import HTSIE.Constraints
 import HTSIE.Accessibility
 import Measures.SII
 import Measures.DFFI
