@@ -1,30 +1,51 @@
-/-  Applications/SAE/DFFI_SAE.lean  [FORMAL_VERIFIED]-/
+/-
+  Applications/SAE/DFFI_SAE.lean
+  ================================
+  DFFI Application to Sparse Autoencoders (SAE).
+
+  Evidence: [FORMAL_VERIFIED]
+-/
+
 import Mathlib.Data.Real.Basic
-import Mathlib.Data.Finset.Basic
+import Mathlib.Tactic.Linarith
 import HTSIE.Foundations.StateSpace
 import HTSIE.Foundations.Constraints
 import HTSIE.Foundations.AccessibleStates
-import HTSIE.Information.DFFI
 
-noncomputable def DFFI_SAE (n : ℕ) (hn : n > 0) (active_count : ℕ)
-    (h_le : active_count ≤ n) : ℝ :=
-  (active_count : ℝ) / n
+namespace Applications.SAE
 
-theorem DFFI_SAE_bounds (n : ℕ) (hn : n > 0) (active_count : ℕ)
-    (h_le : active_count ≤ n) :
-    0 ≤ DFFI_SAE n hn active_count h_le ∧
-    DFFI_SAE n hn active_count h_le ≤ 1 := by
-  unfold DFFI_SAE
-  have hn_pos : (0 : ℝ) < n := by exact_mod_cast hn
+open HTSIE.Foundations
+
+/--
+  SAE Top-K DFFI measure representation.
+  DFFI(k) = 1 - k / N
+-/
+noncomputable def sae_dffi (N k : ℕ) : ℝ :=
+  1 - ((k : ℝ) / (N : ℝ))
+
+theorem sae_dffi_bounds (N k : ℕ) (hN : N > 0) (hk : k ≤ N) :
+    0 ≤ sae_dffi N k ∧ sae_dffi N k ≤ 1 := by
+  unfold sae_dffi
+  have hN_real : 0 < (N : ℝ) := Nat.cast_pos.mpr hN
+  have hk_real : (k : ℝ) ≤ (N : ℝ) := Nat.cast_le.mpr hk
   constructor
-  · apply div_nonneg (by exact_mod_cast Nat.zero_le active_count) (le_of_lt hn_pos)
-  · exact div_le_one_of_le (by exact_mod_cast h_le) (le_of_lt hn_pos)
+  · have hdiv : (k : ℝ) / (N : ℝ) ≤ 1 := by
+      exact div_le_one_of_le₀ hk_real (le_of_lt hN_real)
+    linarith
+  · have hdiv : 0 ≤ (k : ℝ) / (N : ℝ) := div_nonneg (Nat.cast_nonneg _) (le_of_lt hN_real)
+    linarith
 
-theorem DFFI_SAE_monotone_in_sparsity
-    (n : ℕ) (hn : n > 0)
-    (k₁ k₂ : ℕ) (hk₁ : k₁ ≤ n) (hk₂ : k₂ ≤ n)
-    (hk : k₂ ≤ k₁) :
-    DFFI_SAE n hn k₁ hk₁ ≤ DFFI_SAE n hn k₂ hk₂ := by
-  unfold DFFI_SAE
-  have hn_pos : (0 : ℝ) < n := by exact_mod_cast hn
-  exact div_le_div_of_nonneg_right (by exact_mod_cast hk) (le_of_lt hn_pos)
+/--
+  SAE Sparsity Monotonicity: Smaller k (stronger constraint) leads to higher DFFI.
+  If k₁ ≤ k₂, then sae_dffi N k₂ ≤ sae_dffi N k₁.
+-/
+theorem sae_dffi_monotone (N k₁ k₂ : ℕ) (hN : N > 0) (hk : k₁ ≤ k₂) :
+    sae_dffi N k₂ ≤ sae_dffi N k₁ := by
+  unfold sae_dffi
+  have hN_real : 0 < (N : ℝ) := Nat.cast_pos.mpr hN
+  have hk_real : (k₁ : ℝ) ≤ (k₂ : ℝ) := Nat.cast_le.mpr hk
+  have hdiv : (k₁ : ℝ) / (N : ℝ) ≤ (k₂ : ℝ) / (N : ℝ) :=
+    div_le_div_of_nonneg_right hk_real (le_of_lt hN_real)
+  linarith
+
+end Applications.SAE
