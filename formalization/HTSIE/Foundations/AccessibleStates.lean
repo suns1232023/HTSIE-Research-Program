@@ -12,8 +12,8 @@
 
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
-import HTSIEFormalization.HTSIE.Foundations.StateSpace
-import HTSIEFormalization.HTSIE.Foundations.Constraints
+import HTSIE.Foundations.StateSpace
+import HTSIE.Foundations.Constraints
 
 /-!
 ## Accessible State Space
