@@ -17,7 +17,7 @@
   [FORMAL_OPEN] where sorry is present.
 -/
 
-import Mathlib.Order.Basic
+import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import HTSIE.Foundations.Constraints
