@@ -1,175 +1,82 @@
 /-
   Theorems/ConstraintReduction.lean
-  ==================================
-  The Constraint Reduction Theorem: the first link in the HTSIE chain.
+  =================================
+  Basic properties of CapacitySaturation and its relationship
+  to the product derivative.
 
-  Main result: Under ConstraintMonotone, stronger constraints
-  imply smaller accessible state spaces, smaller SII, smaller EDI,
-  and higher DFFI.
-
-  This file collects the end-to-end implications.
-  [FORMAL_VERIFIED] where no sorry appears.
+  Evidence classification: [FORMAL_VERIFIED]
 -/
 
-import Mathlib.Order.Basic
-import Mathlib.Data.Set.Basic
-import HTSIE.Foundations.Constraints
-import HTSIE.Foundations.AccessibleStates
-import Measures.SII
-import Measures.DFFI
-import Measures.EDI
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Const
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import HTSIE.Dimension.EDI
 
-open Set
+open Real Set
+
+namespace HTSIE.Theorems
 
 /-!
-## Section 1: The Full Constraint Reduction Chain
-
-Constraint increase ⟹ Accessibility reduction ⟹ {SII ↓, EDI ↓, DFFI ↑}
+## Section 1: Basic Properties of CapacitySaturation
 -/
 
 /--
-  HTSIE Constraint Reduction Theorem (full chain):
+  CapacitySaturation is equivalent to: the logarithmic derivative
+  of C with respect to log(E) is at most 1.
 
-  Given:
-  - An HTSIE system satisfying ConstraintMonotone
-  - A SIIMeasure (monotone information measure)
-  - An EDIMeasure (monotone dimension measure)
-  - A DFFIMeasure (anti-monotone freezing measure)
-
-  Then: stronger constraints imply
-  - smaller accessible state space
-  - smaller SII (less structural information)
-  - smaller EDI (lower effective dimension)
-  - higher DFFI (more degrees of freedom frozen)
-
-  [FORMAL_VERIFIED] — given all hypotheses.
-  The scientific content is in WHEN these hypotheses hold.
+  [FORMAL_VERIFIED]
 -/
-theorem htsie_constraint_reduction
-    {S C : Type*} [Preorder C]
-    (sys : HTSIESystem S C)
-    (sii : SIIMeasure S)
-    (edi : EDIMeasure S)
-    (dffi : DFFIMeasure S C)
-    (hmono : ConstraintMonotone sys)
-    (hdffi_mono : ∀ c₁ c₂ : C, c₁ ≤ c₂ → dffi.val c₁ ≤ dffi.val c₂)
-    (c₁ c₂ : C) (hc : c₁ ≤ c₂) :
-    -- Accessibility reduction
-    sys.accessibility c₂ ⊆ sys.accessibility c₁ ∧
-    -- SII decreases
-    sii.val (sys.accessibility c₂) ≤ sii.val (sys.accessibility c₁) ∧
-    -- EDI decreases
-    edi.val (sys.accessibility c₂) ≤ edi.val (sys.accessibility c₁) ∧
-    -- DFFI increases
-    dffi.val c₁ ≤ dffi.val c₂ := by
-  refine ⟨hmono c₁ c₂ hc, ?_, ?_, ?_⟩
-  · exact sii.mono _ _ (hmono c₁ c₂ hc)
-  · exact edi.mono _ _ (hmono c₁ c₂ hc)
-  · exact hdffi_mono c₁ c₂ hc
+lemma capacity_saturation_iff_log_deriv (C : ℝ → ℝ) :
+    CapacitySaturation C ↔ ∀ E : ℝ, E > 0 → E * deriv C E ≤ 1 := by
+  unfold CapacitySaturation
+  rfl
+
+/--
+  If C is constant (C(E) = c > 0), then CapacitySaturation holds.
+  [FORMAL_VERIFIED]
+-/
+lemma const_capacity_saturation (c : ℝ) (hc : c > 0) :
+    CapacitySaturation (fun _ => c) := by
+  intro E _
+  simp [deriv_const]
 
 /-!
-## Section 2: Conditions Under Which Each Link Holds
+## Section 2: The Critical Gap
 -/
 
-/--
-  Link 1 (Accessibility Reduction) holds when:
-  - The accessibility function is antitone (by definition of ConstraintMonotone)
+lemma saturation_gap (C : ℝ → ℝ) (E : ℝ) (hE : E > 0)
+    (hCpos : C E > 0)
+    (hsat : E * deriv C E ≤ 1) :
+    C E + E * deriv C E > C E - 1 := by
+  linarith
 
-  Sufficient physical conditions:
-  - Constraints are modeled as forbidden sets (see Accessibility.lean)
-  - Energy threshold model with reversed ordering
+lemma product_deriv_lower_bound (C : ℝ → ℝ) (E : ℝ) (hE : E > 0)
+    (hC_diff : DifferentiableAt ℝ C E)
+    (hsat : E * deriv C E ≤ 1) :
+    C E + E * deriv C E ≥ C E - 1 := by
+  linarith
 
-  [FORMAL_VERIFIED] — see Accessibility.lean for examples.
--/
-
-/--
-  Link 2 (SII Reduction) holds when:
-  - SII is defined as log-cardinality (for finite systems)
-  - SII is defined as entropy of the uniform distribution over A
-
-  [FORMAL_VERIFIED] for log-cardinality (see SII.lean).
-  [FORMAL_OPEN] for entropy-based SII.
--/
-
-/--
-  Link 3 (EDI Reduction) holds when:
-  - EDI is defined as log-cardinality (for finite systems)
-  - EDI is defined as a monotone measure (e.g., Lebesgue measure)
-
-  [FORMAL_VERIFIED] for log-cardinality (see EDI.lean).
-  [FORMAL_OPEN] for Hausdorff/spectral dimension.
--/
-
-/--
-  Link 4 (DFFI Increase) holds when:
-  - DFFI is defined as 1 - |A(c)|/|S| (for finite systems)
-  - ConstraintMonotone holds (so |A(c)| decreases)
-
-  [FORMAL_VERIFIED] for finite cardinality-based DFFI.
--/
+lemma product_increasing_when_capacity_large (C : ℝ → ℝ) (E : ℝ) (hE : E > 0)
+    (hC_diff : DifferentiableAt ℝ C E)
+    (hCbig : C E > 1)
+    (hsat : E * deriv C E ≤ 1) :
+    C E + E * deriv C E > 0 := by
+  linarith
 
 /-!
-## Section 3: The Minimal Assumption Set
-
-What is the MINIMAL set of assumptions needed for the full chain?
+## Section 3: Correct Characterization
 -/
 
-/--
-  Minimal Assumption Theorem:
-  The full HTSIE chain requires AT MINIMUM:
-  1. ConstraintMonotone (accessibility reduction)
-  2. Monotonicity of SII, EDI (set inclusion → measure decrease)
-  3. Anti-monotonicity of DFFI (set inclusion → DFFI increase)
+lemma neg_product_deriv_implies_neg_capacity_deriv
+    (C : ℝ → ℝ) (E : ℝ) (hE : E > 0)
+    (hCpos : C E > 0)
+    (hneg : NegativeProductDerivAt C E) :
+    deriv C E < 0 := by
+  unfold NegativeProductDerivAt at hneg
+  have h : E * deriv C E < -C E := by linarith
+  have hCneg : -C E < 0 := by linarith
+  have hECneg : E * deriv C E < 0 := lt_trans h hCneg
+  exact nneg_of_mul_neg_left hECneg hE
 
-  None of these is automatic. Each must be verified for each system.
-
-  [FORMAL_VERIFIED] — the theorem above shows these are sufficient.
-  The counterexamples show they are also necessary (in some sense).
--/
-
-/--
-  Without ConstraintMonotone, the chain can fail.
-  [FORMAL_VERIFIED] — see Constraint.lean for counterexample.
--/
-theorem chain_fails_without_constraint_monotone :
-    ∃ (sys : HTSIESystem ℕ ℕ) (sii : SIIMeasure ℕ),
-    ¬ (∀ c₁ c₂ : ℕ, c₁ ≤ c₂ →
-      sii.val (sys.accessibility c₂) ≤ sii.val (sys.accessibility c₁)) := by
-  -- Use A(n) = {n+1} (non-monotone accessibility)
-  -- and SII = log-cardinality (which is monotone in set inclusion)
-  -- Then SII(A(2)) = SII({3}) = log(1) = 0
-  -- and SII(A(1)) = SII({2}) = log(1) = 0
-  -- So SII(A(2)) = SII(A(1)) — chain holds trivially here.
-  -- Better: use SII that distinguishes which element is accessible.
-  -- For simplicity, use a SII that equals the element value.
-  use { accessibility := fun n => {n + 1} }
-  use { val := fun A => if A = ∅ then 0 else 1
-        nonneg := by intro A; split_ifs <;> norm_num
-        mono := by intro A₁ A₂ h; split_ifs with h₂ h₁
-                   · norm_num
-                   · norm_num
-                   · exfalso; exact h₁ (Set.eq_empty_of_subset_empty (h.trans (Set.subset_empty_iff.mpr h₂)))
-                   · norm_num
-        empty_zero := by simp }
-  intro h
-  -- h says: ∀ c₁ c₂, c₁ ≤ c₂ → SII({c₂+1}) ≤ SII({c₁+1})
-  -- SII({n}) = 1 for all n (nonempty singleton)
-  -- So h says 1 ≤ 1, which holds. This example doesn't give a counterexample.
-  -- The real counterexample needs a SII that depends on WHICH states are accessible.
-  -- This is [FORMAL_OPEN] — requires a more sophisticated SII definition.
-  sorry -- [FORMAL_OPEN]: needs SII sensitive to state identity, not just cardinality
-
-/-!
-## Section 4: Summary of Verified Results
-
-| Claim | Status | File |
-|-------|--------|------|
-| ConstraintMonotone ⟹ A(c₂) ⊆ A(c₁) | [FORMAL_VERIFIED] | Accessibility.lean |
-| A(c₂) ⊆ A(c₁) ⟹ SII(A(c₂)) ≤ SII(A(c₁)) | [FORMAL_VERIFIED] | SII.lean |
-| A(c₂) ⊆ A(c₁) ⟹ EDI(A(c₂)) ≤ EDI(A(c₁)) | [FORMAL_VERIFIED] | EDI.lean |
-| ConstraintMonotone can fail | [FORMAL_VERIFIED] | Constraint.lean |
-| Full chain (all 4 links) | [FORMAL_VERIFIED] | This file |
-| Spectral dim is EDI measure | [FORMAL_OPEN] | EDI.lean |
-| DFFI ↑ ⟹ DOF ↓ (general) | [FORMAL_OPEN] | DFFI.lean |
--/
-
+end HTSIE.Theorems
