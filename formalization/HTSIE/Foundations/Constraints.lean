@@ -65,6 +65,7 @@ theorem constraint_monotone_can_fail :
     accessibility := fun n => if n + 1 ∈ ({1, 2, 3, 4, 5} : Finset ℕ) then {n + 1} else ∅
     accessible_subset := by
       intro c
+      change (if c + 1 ∈ ({1, 2, 3, 4, 5} : Finset ℕ) then {c + 1} else ∅) ⊆ {1, 2, 3, 4, 5}
       split_ifs with h
       · exact Finset.singleton_subset_iff.mpr h
       · exact Finset.empty_subset _
@@ -73,7 +74,8 @@ theorem constraint_monotone_can_fail :
   intro h
   have h12 : (1 : ℕ) ≤ 2 := by norm_num
   have hsub := h 1 2 h12
-  dsimp [sys] at hsub
+  change (if 2 + 1 ∈ ({1, 2, 3, 4, 5} : Finset ℕ) then {2 + 1} else ∅) ⊆
+         (if 1 + 1 ∈ ({1, 2, 3, 4, 5} : Finset ℕ) then {1 + 1} else ∅) at hsub
   have h1 : (1 + 1 : ℕ) ∈ ({1, 2, 3, 4, 5} : Finset ℕ) := by decide
   have h2 : (2 + 1 : ℕ) ∈ ({1, 2, 3, 4, 5} : Finset ℕ) := by decide
   rw [if_pos h1, if_pos h2] at hsub
