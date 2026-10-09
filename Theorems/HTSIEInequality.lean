@@ -20,12 +20,11 @@
 import Mathlib.Order.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.Calculus.Deriv.Basic
-import HTSIEFormalization.HTSIE.Basic
-import HTSIEFormalization.HTSIE.Constraint
-import HTSIEFormalization.HTSIE.Accessibility
-import HTSIEFormalization.Measures.SII
-import HTSIEFormalization.Measures.DFFI
-import HTSIEFormalization.Measures.EDI
+import HTSIE.Foundations.Constraints
+import HTSIE.Accessibility
+import Measures.SII
+import Measures.DFFI
+import Measures.EDI
 
 open Set Real
 
