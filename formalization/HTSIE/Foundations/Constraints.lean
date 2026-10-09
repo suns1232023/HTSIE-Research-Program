@@ -14,6 +14,8 @@ import Mathlib.Order.Basic
 import Mathlib.Data.Finset.Basic
 import HTSIE.Foundations.StateSpace
 
+namespace HTSIE.Foundations
+
 /-!
 ## Structural Constraints
 
@@ -57,16 +59,15 @@ def ConstraintMonotone {X : FinStateSpace} (sys : FinConstraintSystem X) : Prop 
 theorem constraint_monotone_can_fail :
     ∃ (X : FinStateSpace) (sys : FinConstraintSystem X),
     ¬ ConstraintMonotone sys := by
-  let X : FinStateSpace := {
-    states := {1, 2, 3, 4, 5}
-    nonempty := ⟨1, by simp⟩
-  }
+  have h_nonempty : ({1, 2, 3, 4, 5} : Finset ℕ).Nonempty := ⟨1, by decide⟩
+  let X : FinStateSpace := ⟨{1, 2, 3, 4, 5}, h_nonempty⟩
   let sys : FinConstraintSystem X := {
-    accessibility := fun n => if n + 1 ∈ ({1,2,3,4,5} : Finset ℕ) then {n+1} else ∅
+    accessibility := fun n => if n + 1 ∈ ({1, 2, 3, 4, 5} : Finset ℕ) then {n + 1} else ∅
     accessible_subset := by
       intro c
-      split_ifs with h
-      · exact Finset.singleton_subset_iff.mpr h
+      split
+      · rename_i h
+        exact Finset.singleton_subset_iff.mpr h
       · exact Finset.empty_subset _
   }
   refine ⟨X, sys, ?_⟩
@@ -93,3 +94,5 @@ theorem constraint_monotone_card_le
     (c₁ c₂ : ℕ) (hc : c₁ ≤ c₂) :
     (sys.accessibility c₂).card ≤ (sys.accessibility c₁).card :=
   Finset.card_le_card (hmono c₁ c₂ hc)
+
+end HTSIE.Foundations
