@@ -17,12 +17,12 @@
     - DFFI increases
 -/
 
-import HTSIEFormalization.HTSIE.Foundations.StateSpace
-import HTSIEFormalization.HTSIE.Foundations.Constraints
-import HTSIEFormalization.HTSIE.Foundations.AccessibleStates
-import HTSIEFormalization.HTSIE.Information.SII
-import HTSIEFormalization.HTSIE.Information.DFFI
-import HTSIEFormalization.HTSIE.Dimension.EDI
+import HTSIE.Foundations.StateSpace
+import HTSIE.Foundations.Constraints
+import HTSIE.Foundations.AccessibleStates
+import HTSIE.Information.SII
+import HTSIE.Information.DFFI
+import HTSIE.Dimension.EDI
 
 /-!
 ## HTSIE Inequality (Finite-State Version)
