@@ -10,7 +10,11 @@ rev = "v4.14.0"
 [[lean_lib]]
 name = "HTSIE"
 srcDir = "."
-globs = ["HTSIE.+"]
+globs = [
+  "HTSIE.Foundations.+",
+  "HTSIE.Information.+",
+  "HTSIE.Dimension.+"
+]
 
 [[lean_lib]]
 name = "Theorems"
