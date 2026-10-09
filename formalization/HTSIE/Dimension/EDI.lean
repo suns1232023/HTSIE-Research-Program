@@ -26,7 +26,7 @@ open Real HTSIE.Foundations
 /--
   EDI using log-cardinality (finite-state version).
   EDI(c) = log(|A(c)|)
-  [FORMALized]
+  [FORMALIZED]
 -/
 noncomputable def EDI
     {X : FinStateSpace} (sys : FinConstraintSystem X) (c : ℕ) : ℝ :=
