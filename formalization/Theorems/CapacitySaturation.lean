@@ -2,7 +2,6 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith
-import HTSIE.Capacity
 
 open Real
 
