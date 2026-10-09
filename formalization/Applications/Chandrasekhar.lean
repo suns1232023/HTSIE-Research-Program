@@ -24,7 +24,6 @@
 
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.MeanValue
-import HTSIE.Basic
 import HTSIE.Constraint
 import Theorems.Instability
 
