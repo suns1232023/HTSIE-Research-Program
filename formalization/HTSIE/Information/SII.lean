@@ -39,9 +39,9 @@ theorem sii_nonneg
   rw [if_neg hnz]
   apply div_nonneg
   · apply Real.log_nonneg
-    exact Nat.one_le_cast.mpr hacc
+    exact_mod_cast hacc
   · apply Real.log_nonneg
-    exact Nat.one_le_cast.mpr X.card_pos
+    exact_mod_cast X.card_pos
 
 /--
   SII Monotonicity.
@@ -59,16 +59,18 @@ theorem sii_monotone
   have hnz1 : accessibleCard sys c₁ ≠ 0 := by linarith
   have hnz2 : accessibleCard sys c₂ ≠ 0 := by linarith
   rw [if_neg hnz1, if_neg hnz2]
-  have hX_pos : 0 < (X.card : ℝ) := Nat.cast_pos.mpr X.card_pos
   by_cases hX1 : X.card = 1
-  · have h_card1 : (X.card : ℝ) = 1 := Nat.cast_inj.mpr hX1
+  · have h_card1 : (X.card : ℝ) = 1 := by exact_mod_cast hX1
     rw [h_card1, Real.log_one, div_zero, div_zero]
-  · have hX_gt1 : 1 < (X.card : ℝ) := Nat.one_lt_cast.mpr (lt_of_le_of_ne X.card_pos (Ne.symm hX1))
+  · have hX_gt1 : 1 < (X.card : ℝ) := by
+      have hpos : 1 ≤ X.card := X.card_pos
+      have hne : X.card ≠ 1 := hX1
+      exact_mod_cast (lt_of_le_of_ne hpos (Ne.symm hne))
     have hlogX : 0 < Real.log (X.card : ℝ) := Real.log_pos hX_gt1
     have hlog_le : Real.log (accessibleCard sys c₂ : ℝ) ≤ Real.log (accessibleCard sys c₁ : ℝ) := by
       apply Real.log_le_log
-      · exact Nat.cast_pos.mpr (by linarith)
-      · exact Nat.cast_le.mpr h_card_le
+      · exact_mod_cast hacc₂
+      · exact_mod_cast h_card_le
     exact div_le_div_of_nonneg_right hlog_le (le_of_lt hlogX)
 
 end HTSIE.Information
