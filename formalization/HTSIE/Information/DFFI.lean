@@ -44,11 +44,12 @@ theorem dffi_bounds
     0 ≤ DFFI sys c ∧ DFFI sys c ≤ 1 := by
   unfold DFFI
   have hcard_le : accessibleCard sys c ≤ X.card := Finset.card_le_card (sys.accessible_subset c)
-  have hpos : 0 < (X.card : ℝ) := Nat.cast_pos.mpr X.card_pos
+  have hpos : 0 < (X.card : ℝ) := by exact_mod_cast X.card_pos
+  have hcard_real : (accessibleCard sys c : ℝ) ≤ (X.card : ℝ) := by exact_mod_cast hcard_le
   constructor
   · have hdiv : (accessibleCard sys c : ℝ) / (X.card : ℝ) ≤ 1 := by
       rw [div_le_iff₀ hpos]
-      linarith [Nat.cast_le.mpr hcard_le]
+      linarith
     linarith
   · have hdiv : 0 ≤ (accessibleCard sys c : ℝ) / (X.card : ℝ) := by
       exact div_nonneg (Nat.cast_nonneg _) (le_of_lt hpos)
@@ -65,9 +66,10 @@ theorem dffi_monotone
     DFFI sys c₁ ≤ DFFI sys c₂ := by
   unfold DFFI
   have h_card_le := accessibleCard_monotone sys hmono c₁ c₂ hc
-  have hpos : 0 < (X.card : ℝ) := Nat.cast_pos.mpr X.card_pos
+  have hpos : 0 < (X.card : ℝ) := by exact_mod_cast X.card_pos
+  have hcard_real : (accessibleCard sys c₂ : ℝ) ≤ (accessibleCard sys c₁ : ℝ) := by exact_mod_cast h_card_le
   have hdiv : (accessibleCard sys c₂ : ℝ) / (X.card : ℝ) ≤ (accessibleCard sys c₁ : ℝ) / (X.card : ℝ) := by
-    exact div_le_div_of_nonneg_right (Nat.cast_le.mpr h_card_le) (le_of_lt hpos)
+    exact div_le_div_of_nonneg_right hcard_real (le_of_lt hpos)
   linarith
 
 /--
@@ -78,16 +80,16 @@ theorem dffi_zero_iff_full_access
     {X : FinStateSpace} (sys : FinConstraintSystem X) (c : ℕ) :
     DFFI sys c = 0 ↔ accessibleCard sys c = X.card := by
   unfold DFFI
-  have hpos : 0 < (X.card : ℝ) := Nat.cast_pos.mpr X.card_pos
+  have hpos : 0 < (X.card : ℝ) := by exact_mod_cast X.card_pos
   constructor
   · intro h
     have hdiv : (accessibleCard sys c : ℝ) / (X.card : ℝ) = 1 := by linarith
     rw [div_eq_one_iff_eq (ne_of_gt hpos)] at hdiv
-    exact Nat.cast_injective hdiv
+    exact_mod_cast hdiv
   · intro h
     have hdiv : (accessibleCard sys c : ℝ) / (X.card : ℝ) = 1 := by
       rw [div_eq_one_iff_eq (ne_of_gt hpos)]
-      exact Nat.cast_inj.mpr h
+      exact_mod_cast h
     linarith
 
 end HTSIE.Information
