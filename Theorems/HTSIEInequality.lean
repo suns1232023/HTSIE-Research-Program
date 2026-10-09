@@ -21,7 +21,7 @@ import Mathlib.Order.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import HTSIE.Foundations.Constraints
-import HTSIE.Accessibility
+import HTSIE.Foundations.AccessibleStates
 import Measures.SII
 import Measures.DFFI
 import Measures.EDI
