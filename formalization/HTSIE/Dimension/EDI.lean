@@ -17,9 +17,9 @@
 -/
 
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import HTSIEFormalization.HTSIE.Foundations.StateSpace
-import HTSIEFormalization.HTSIE.Foundations.Constraints
-import HTSIEFormalization.HTSIE.Foundations.AccessibleStates
+import HTSIE.Foundations.StateSpace
+import HTSIE.Foundations.Constraints
+import HTSIE.Foundations.AccessibleStates
 
 open Real
 
