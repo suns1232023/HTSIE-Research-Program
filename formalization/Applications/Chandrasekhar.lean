@@ -22,10 +22,15 @@
   [PHYSICAL_OPEN] for physical interpretations.
 -/
 
+import HTSIE.Foundations.StateSpace
+import HTSIE.Foundations.Constraints
+import HTSIE.Foundations.AccessibleStates
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.MeanValue
 import HTSIE.Foundations.Constraints
 import Theorems.Instability
+
+open HTSIE.Foundations
 
 open Real Set
 
