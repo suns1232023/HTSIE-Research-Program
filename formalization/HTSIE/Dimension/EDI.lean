@@ -10,6 +10,7 @@
 -/
 
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Tactic.Linarith
 import HTSIE.Foundations.StateSpace
 import HTSIE.Foundations.Constraints
 import HTSIE.Foundations.AccessibleStates
@@ -48,16 +49,15 @@ theorem edi_nonneg
   [FORMAL_VERIFIED]
 -/
 theorem edi_zero_iff
-    {X : FinStateSpace} (sys : FinConstraintSystem X) (c : ℕ) :
+    {X : FinStateSpace} (sys : FinConstraintSystem X) (c : ℕ)
+    (hacc : accessibleCard sys c ≥ 1) :
     EDI sys c = 0 ↔ accessibleCard sys c = 1 := by
   unfold EDI
   constructor
   · intro h
-    have hlog := Real.log_eq_zero.mp h
-    rcases hlog with h1 | h1 | h1
-    · exact Nat.cast_injective (by norm_num [h1])
-    · exact Nat.cast_injective h1
-    · exact Nat.cast_injective (by norm_num [h1])
+    have hpos : 0 < (accessibleCard sys c : ℝ) := Nat.cast_pos.mpr (by linarith)
+    have h1 : (accessibleCard sys c : ℝ) = 1 := (Real.log_eq_zero_iff_eq_one hpos).mp h
+    exact Nat.cast_injective h1
   · intro h
     rw [h, Nat.cast_one, Real.log_one]
 
