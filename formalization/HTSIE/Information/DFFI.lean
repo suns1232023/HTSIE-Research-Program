@@ -21,6 +21,8 @@ import HTSIE.Foundations.StateSpace
 import HTSIE.Foundations.Constraints
 import HTSIE.Foundations.AccessibleStates
 
+open HTSIE.Foundations
+
 /-!
 ## Degree-of-Freedom Freeze Index
 
