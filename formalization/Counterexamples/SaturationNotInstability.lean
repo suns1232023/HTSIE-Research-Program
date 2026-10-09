@@ -1,6 +1,5 @@
 /- Counterexamples/SaturationNotInstability.lean -/
 import Mathlib.Data.Real.Basic
-import HTSIE.Basic
 
 open Real
 
