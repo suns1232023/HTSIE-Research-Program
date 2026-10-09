@@ -1,4 +1,7 @@
 /- Counterexamples/SaturationNotInstability.lean -/
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Data.Real.Basic
 
 open Real
