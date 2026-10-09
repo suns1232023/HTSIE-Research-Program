@@ -65,9 +65,8 @@ theorem constraint_monotone_can_fail :
     accessibility := fun n => if n + 1 ∈ ({1, 2, 3, 4, 5} : Finset ℕ) then {n + 1} else ∅
     accessible_subset := by
       intro c
-      split
-      · rename_i h
-        exact Finset.singleton_subset_iff.mpr h
+      split_ifs with h
+      · exact Finset.singleton_subset_iff.mpr h
       · exact Finset.empty_subset _
   }
   refine ⟨X, sys, ?_⟩
