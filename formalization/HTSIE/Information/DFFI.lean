@@ -12,6 +12,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
+import Mathlib.Tactic.Linarith
 import HTSIE.Foundations.StateSpace
 import HTSIE.Foundations.Constraints
 import HTSIE.Foundations.AccessibleStates
@@ -42,14 +43,14 @@ theorem dffi_bounds
     {X : FinStateSpace} (sys : FinConstraintSystem X) (c : ℕ) :
     0 ≤ DFFI sys c ∧ DFFI sys c ≤ 1 := by
   unfold DFFI
-  have hcard_le : accessibleCard sys c ≤ X.card := sys.accessible_subset c
+  have hcard_le : accessibleCard sys c ≤ X.card := Finset.card_le_card (sys.accessible_subset c)
   have hpos : 0 < (X.card : ℝ) := Nat.cast_pos.mpr X.card_pos
   constructor
-  · have : (accessibleCard sys c : ℝ) / (X.card : ℝ) ≤ 1 := by
+  · have hdiv : (accessibleCard sys c : ℝ) / (X.card : ℝ) ≤ 1 := by
       rw [div_le_iff₀ hpos]
-      exact Nat.cast_le.mpr hcard_le
+      linarith [Nat.cast_le.mpr hcard_le]
     linarith
-  · have : 0 ≤ (accessibleCard sys c : ℝ) / (X.card : ℝ) := by
+  · have hdiv : 0 ≤ (accessibleCard sys c : ℝ) / (X.card : ℝ) := by
       exact div_nonneg (Nat.cast_nonneg _) (le_of_lt hpos)
     linarith
 
