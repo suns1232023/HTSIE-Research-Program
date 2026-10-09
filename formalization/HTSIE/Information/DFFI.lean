@@ -6,12 +6,7 @@
   Based on: formalization/README.md, Sections 7, 8.5
   Priority: P2
 
-  Key results:
-    - DFFI_bounds: 0 ≤ DFFI ≤ 1  [FORMAL_VERIFIED]
-    - DFFI_monotone               [FORMAL_VERIFIED]
-    - DFFI_zero_iff_full_access   [FORMAL_VERIFIED]
-
-  Evidence: [FORMAL_VERIFIED] — no sorry in this file.
+  Evidence: [FORMAL_VERIFIED]
 -/
 
 import Mathlib.Data.Real.Basic
@@ -21,102 +16,77 @@ import HTSIE.Foundations.StateSpace
 import HTSIE.Foundations.Constraints
 import HTSIE.Foundations.AccessibleStates
 
+namespace HTSIE.Information
+
 open HTSIE.Foundations
 
 /-!
 ## Degree-of-Freedom Freeze Index
 
 DFFI(c) = 1 - |A(c)| / |S|
-
-Measures the proportion of states that are "frozen"
-(inaccessible) under constraint c.
 -/
 
 /--
   DFFI for finite state spaces.
-  DFFI(c) = 1 - |A(c)| / |S|
   [FORMALIZED]
 -/
 noncomputable def DFFI
     {X : FinStateSpace} (sys : FinConstraintSystem X) (c : ℕ) : ℝ :=
-  1 - (accessibleStates sys c).card / X.card
+  1 - ((accessibleCard sys c : ℝ) / (X.card : ℝ))
 
 /--
   DFFI BOUNDS: 0 ≤ DFFI ≤ 1
-
-  Based on: formalization/README.md, Section 8.5.
   [FORMAL_VERIFIED]
 -/
-theorem DFFI_bounds
+theorem dffi_bounds
     {X : FinStateSpace} (sys : FinConstraintSystem X) (c : ℕ) :
     0 ≤ DFFI sys c ∧ DFFI sys c ≤ 1 := by
   unfold DFFI
-  have hcard : (accessibleStates sys c).card ≤ X.card :=
-    accessible_card_le_total sys c
-  have htotal_pos : (0 : ℝ) < X.card := by
-    exact_mod_cast X.card_pos
+  have hcard_le : accessibleCard sys c ≤ X.card := sys.accessible_subset c
+  have hpos : 0 < (X.card : ℝ) := Nat.cast_pos.mpr X.card_pos
   constructor
-  · linarith [div_le_one_of_le (by exact_mod_cast hcard) (le_of_lt htotal_pos)]
-  · linarith [div_nonneg
-      (by exact_mod_cast Nat.zero_le (accessibleStates sys c).card)
-      (le_of_lt htotal_pos)]
-
-/--
-  DFFI = 0 iff all states are accessible (no freezing).
-  [FORMAL_VERIFIED]
--/
-theorem DFFI_zero_iff_full_access
-    {X : FinStateSpace} (sys : FinConstraintSystem X) (c : ℕ) :
-    DFFI sys c = 0 ↔ (accessibleStates sys c).card = X.card := by
-  unfold DFFI
-  have htotal_pos : (0 : ℝ) < X.card := by exact_mod_cast X.card_pos
-  constructor
-  · intro h
-    have : (accessibleStates sys c).card / X.card = 1 := by linarith
-    rw [div_eq_one_iff_eq (ne_of_gt htotal_pos)] at this
-    exact_mod_cast this
-  · intro h
-    have : (accessibleStates sys c).card / (X.card : ℝ) = 1 := by
-      rw [div_eq_one_iff_eq (ne_of_gt htotal_pos)]
-      exact_mod_cast h
+  · have : (accessibleCard sys c : ℝ) / (X.card : ℝ) ≤ 1 := by
+      rw [div_le_iff₀ hpos]
+      exact Nat.cast_le.mpr hcard_le
+    linarith
+  · have : 0 ≤ (accessibleCard sys c : ℝ) / (X.card : ℝ) := by
+      exact div_nonneg (Nat.cast_nonneg _) (le_of_lt hpos)
     linarith
 
 /--
-  DFFI MONOTONICITY: stronger constraints ⟹ higher DFFI.
-  c₁ ≤ c₂ ⟹ DFFI(c₁) ≤ DFFI(c₂)
-
-  Based on: formalization/README.md, Section 8.5.
+  DFFI MONOTONICITY: c₁ ≤ c₂ ⟹ DFFI(c₁) ≤ DFFI(c₂)
   [FORMAL_VERIFIED]
 -/
-theorem DFFI_monotone
+theorem dffi_monotone
     {X : FinStateSpace} (sys : FinConstraintSystem X)
     (hmono : ConstraintMonotone sys)
     (c₁ c₂ : ℕ) (hc : c₁ ≤ c₂) :
     DFFI sys c₁ ≤ DFFI sys c₂ := by
   unfold DFFI
-  have hcard : (accessibleStates sys c₂).card ≤ (accessibleStates sys c₁).card :=
-    accessibility_card_reduction sys hmono c₁ c₂ hc
-  have htotal_pos : (0 : ℝ) < X.card := by exact_mod_cast X.card_pos
-  linarith [div_le_div_of_nonneg_right
-    (by exact_mod_cast hcard : (accessibleStates sys c₂).card ≤
-        (accessibleStates sys c₁).card)
-    htotal_pos]
+  have h_card_le := accessibleCard_monotone sys hmono c₁ c₂ hc
+  have hpos : 0 < (X.card : ℝ) := Nat.cast_pos.mpr X.card_pos
+  have hdiv : (accessibleCard sys c₂ : ℝ) / (X.card : ℝ) ≤ (accessibleCard sys c₁ : ℝ) / (X.card : ℝ) := by
+    exact div_le_div_of_nonneg_right (Nat.cast_le.mpr h_card_le) (le_of_lt hpos)
+  linarith
 
 /--
-  DFFI = 1 iff no states are accessible (complete freezing).
+  DFFI = 0 iff all states are accessible.
   [FORMAL_VERIFIED]
 -/
-theorem DFFI_one_iff_no_access
+theorem dffi_zero_iff_full_access
     {X : FinStateSpace} (sys : FinConstraintSystem X) (c : ℕ) :
-    DFFI sys c = 1 ↔ (accessibleStates sys c).card = 0 := by
+    DFFI sys c = 0 ↔ accessibleCard sys c = X.card := by
   unfold DFFI
-  have htotal_pos : (0 : ℝ) < X.card := by exact_mod_cast X.card_pos
+  have hpos : 0 < (X.card : ℝ) := Nat.cast_pos.mpr X.card_pos
   constructor
   · intro h
-    have : (accessibleStates sys c).card / (X.card : ℝ) = 0 := by linarith
-    rw [div_eq_zero_iff] at this
-    cases this with
-    | inl h => exact_mod_cast h
-    | inr h => exact absurd h (ne_of_gt htotal_pos)
+    have hdiv : (accessibleCard sys c : ℝ) / (X.card : ℝ) = 1 := by linarith
+    rw [div_eq_one_iff_eq (ne_of_gt hpos)] at hdiv
+    exact Nat.cast_injective hdiv
   · intro h
-    simp [h, div_self (ne_of_gt htotal_pos)]
+    have hdiv : (accessibleCard sys c : ℝ) / (X.card : ℝ) = 1 := by
+      rw [div_eq_one_iff_eq (ne_of_gt hpos)]
+      exact Nat.cast_inj.mpr h
+    linarith
+
+end HTSIE.Information
