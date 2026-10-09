@@ -26,7 +26,7 @@ open Real HTSIE.Foundations
 /--
   EDI using log-cardinality (finite-state version).
   EDI(c) = log(|A(c)|)
-  [FORMALIZED]
+  [FORMALized]
 -/
 noncomputable def EDI
     {X : FinStateSpace} (sys : FinConstraintSystem X) (c : ℕ) : ℝ :=
@@ -42,7 +42,7 @@ theorem edi_nonneg
     EDI sys c ≥ 0 := by
   unfold EDI
   apply Real.log_nonneg
-  exact Nat.one_le_cast.mpr hacc
+  exact_mod_cast hacc
 
 /--
   EDI = 0 iff exactly one state is accessible.
@@ -55,11 +55,16 @@ theorem edi_zero_iff
   unfold EDI
   constructor
   · intro h
-    have hpos : 0 < (accessibleCard sys c : ℝ) := Nat.cast_pos.mpr (by linarith)
-    have h1 : (accessibleCard sys c : ℝ) = 1 := (Real.log_eq_zero_iff_eq_one hpos).mp h
-    exact Nat.cast_injective h1
+    have hpos : 0 < (accessibleCard sys c : ℝ) := by exact_mod_cast hacc
+    have h1 : (accessibleCard sys c : ℝ) = 1 := by
+      rcases Real.log_eq_zero.mp h with h_zero | h_one | h_neg_one
+      · linarith
+      · exact h_one
+      · linarith
+    exact_mod_cast h1
   · intro h
-    rw [h, Nat.cast_one, Real.log_one]
+    rw [h]
+    norm_num
 
 /--
   EDI MONOTONICITY: c₁ ≤ c₂ ⟹ EDI(c₂) ≤ EDI(c₁)
@@ -74,7 +79,7 @@ theorem edi_monotone
   unfold EDI
   have h_card_le := accessibleCard_monotone sys hmono c₁ c₂ hc
   apply Real.log_le_log
-  · exact Nat.cast_pos.mpr (by linarith)
-  · exact Nat.cast_le.mpr h_card_le
+  · exact_mod_cast hacc₂
+  · exact_mod_cast h_card_le
 
 end HTSIE.Dimension
